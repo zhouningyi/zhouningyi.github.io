@@ -32,12 +32,13 @@
     function main() {
       // 加载图片
         var imgBg = window.imgBg = new Image();
-        imgBg.src = 'img/bg.png';
+        imgBg.src = 'http://open-wedding.qiniudn.com/pngbg.png';
         var imgAdd = window.imgAdd = new Image();
-        imgAdd.src = 'img/add.png';
+        imgAdd.src = 'http://open-wedding.qiniudn.com/pngadd.png';
 
         imgBg.onload = function() {
             imgAdd.onload = function() {
+              console.log('onload')
               createCanvas();
               drawCanvas(imgBg,imgAdd,0.6);
             }
@@ -68,8 +69,8 @@
 
     function redraw(e){
       //鼠标移动自动重绘
-      var mx = e.pageX/e.srcElement.offsetWidth;
-      if(imgBg&&imgAdd){
+      if(imgBg&&imgAdd&&canvas){
+        var mx = e.pageX/e.srcElement.offsetWidth;
         drawCanvas(window.imgBg,window.imgAdd,mx);
       }
     }
