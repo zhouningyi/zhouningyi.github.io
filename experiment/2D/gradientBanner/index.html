@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>canvasTest</title>
+    <style>
+    body{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top:0px;
+        left: 0px;
+        overflow:visible;
+        background: #000;
+    }
+    #containner {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top:0px;
+        left: 0px;
+        cursor: pointer;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="containner"></div>
+    <script>
+
+    function main() {
+      // 加载图片
+        var imgBg = window.imgBg = new Image();
+        imgBg.src = 'img/bg.png';
+        var imgAdd = window.imgAdd = new Image();
+        imgAdd.src = 'img/add.png';
+
+        imgBg.onload = function() {
+            imgAdd.onload = function() {
+              createCanvas();
+              drawCanvas(imgBg,imgAdd,0.6);
+            }
+        }
+    }
+
+    function createCanvas(){
+      //创造canvas
+      var canvas = window.canvas = document.createElement('canvas');
+      canvas.width = canvasW= 2000;
+      canvas.height = canvasH= 518;
+      containner.appendChild(canvas);
+    }
+
+    function drawCanvas(imgBg,imgAdd,phi){
+      var ctx =canvas.getContext('2d');
+      ctx.drawImage(imgBg,0,0,canvasW,canvasH);
+
+      var grd=ctx.createLinearGradient(0,0,canvasW,0);
+      grd.addColorStop(0,"rgba(0,0,0,1)");
+      grd.addColorStop(0.5,"rgba(0,0,0,"+phi+")");
+      grd.addColorStop(1,"rgba(0,0,0,1)");
+      ctx.fillStyle=grd;
+      ctx.fillRect(0,0,canvasW,canvasH);
+
+      ctx.drawImage(imgAdd,0,0,canvasW,canvasH);
+    };
+
+    function redraw(e){
+      //鼠标移动自动重绘
+      var mx = e.pageX/e.srcElement.offsetWidth;
+      if(imgBg&&imgAdd){
+        drawCanvas(window.imgBg,window.imgAdd,mx);
+      }
+    }
+
+    function save(){
+      //保存图片
+      window.open(canvas.toDataURL())
+    }
+
+    main();
+    containner.addEventListener('mousemove',redraw);
+    containner.addEventListener('click',save);
+    </script>
+</body>
+
+</html>
