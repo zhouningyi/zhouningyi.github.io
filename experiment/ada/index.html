@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>连﹋连﹏抽</title>
+    <style>
+    @import url("./css/main.css");
+    </style>
+</head>
+<body>
+    <div class="lianlian-container"></div>
+    <script src="lib/jquery-1.11.0.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/weixin.js"></script>
+
+    <script>
+
+    var game = new Game($('.lianlian-container'),4);
+
+    $(window).on("orientationchange",function(e){
+        if(window.orientation == 90){
+            alert('亲 请竖着玩游戏！');
+        }
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+body,div,table{
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+.lianlian-container{
+  background-image:url("../image/bg.jpg"); 
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  overflow: hidden;
+}
+
+.lianlian-table{
+  background: rgba(255,255,255,0.1);
+  box-shadow: 10px 10px 25px rgba(30,30,30,0.8);
+}
+
+.lianlian-td{
+  transition: 0.3s all ease-in-out;
+  -webkit-transition: 0.3s all ease-in-out;
+  opacity: 1;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+}
+.lianlian-tr{
+}
+
+.lianlian-table .lianlian-td-selected{
+  opacity: 0.6;
+}
+.lianlian-td:active{
+  opacity: 0.6;
+}
+
+.lianlian-title{
+  text-align: center;
+  vertical-align: middle;
+  color: rgba(255,155,55,1);
+  text-shadow: 2px 3px #fff;
+}
