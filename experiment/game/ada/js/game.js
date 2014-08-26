@@ -22,7 +22,7 @@
        var h = node.height();
        var N = this.N;
 
-       if (w <= h) {
+       // if (w <= h) {
          var gridsH = this.gridsH = parseInt((1 - 2 * marginPercent) * w / N) * N;
          var gridsL = parseInt(marginPercent * w);
          var gridsT = parseInt((h - gridsH) / 2);
@@ -49,7 +49,7 @@
           'fontWeight':'bold'
          })
          this.node.append(titleNode);
-       }
+       // }
 
      }
 
