@@ -10,15 +10,25 @@
     <div class="lianlian-container"></div>
     <script src="lib/jquery-1.11.0.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/show.js"></script>
     <script src="js/weixin.js"></script>
 
     <script>
 
-    var game = new Game($('.lianlian-container'),4);
+    var game = new Game($('.lianlian-container'),5,6);
+   setTimeout(function(){game.pass();},200)
+    var show = new Show($('.lianlian-container'));
+    show.preLoad();
+    $('.lianlian-container').on('pass',function(){
+        game.clear();
+        show.slider();
+    })
+    
+    // show.bg();
 
     $(window).on("orientationchange",function(e){
         if(window.orientation == 90){
-            alert('亲 请竖着玩游戏！');
+            alert('亲 请竖着玩游戏哈！');
         }
     });
     </script>

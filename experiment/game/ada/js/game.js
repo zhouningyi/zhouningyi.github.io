@@ -1,151 +1,257 @@
-   var picList = ['./image/logo4.png', './image/logo1.png', './image/logo2.png', './image/logo3.png'];
-   var marginPercent = 0.05;
-   var titleText = '连﹋连﹏抽';
-   (function(exports) {
+(function(exports) {
+  var picList = ['./image/logo1.png', './image/logo2.png', './image/logo3.png', './image/logo4.png', './image/logo5.png', './image/logo6.png', './image/logo7.png', './image/logo8.png', './image/logo9.png'];
+  var marginPercent = 0.1;
 
-     selected = null;
+  var titlePhi = 0.35;
+  var sucN = 0;
+  selected = null;
 
-     function Game(node, N) {
-       this.node = node;
-       this.N = N;
+  function Game(node, nX, nY) {
+    this.node = node;
+    this.nX = nX;
+    this.nY = nY;
+    this.N = nX * nY;
 
-       this.dom();
-       this.table();
-       this.title();
-       this.imgs();
-     }
+    this.initMap = [];
+    this.dom();
+    this.bg();
+    this.table();
+    this.title();
+    this.imgs();
+  }
 
-     Game.prototype.dom = function() {
+  //连连看的抽象图
+  Game.prototype.initMap = function() {
+    var map = this.map = window.mapGame = [];
+    for (var x = 0; x < this.nX; x++) {
+      for (var y = 0; y < this.nY; y++) {
+        map[x][y] = {
+          'exist': true,
+          'searched': false
+        };
+      }
+    }
+  }
 
-       var node = this.node;
-       var w = node.width();
-       var h = node.height();
-       var N = this.N;
+  Game.prototype.bg = function() {
+    var bgURL = 'url(' + './image/bg.png' + ')';
+    this.node
+      .css({
+        'backgroundImage': bgURL
+      });
 
-       // if (w <= h) {
-         var gridsH = this.gridsH = parseInt((1 - 2 * marginPercent) * w / N) * N;
-         var gridsL = parseInt(marginPercent * w);
-         var gridsT = parseInt((h - gridsH) / 2);
-         var gridsNode = this.gridsNode = $('<table class="lianlian-table"></table>')
-           .css({
-             'width': gridsH + 'px',
-             'height': gridsH + 'px',
-             'left': gridsL + 'px',
-             'top': gridsT + 'px',
-           });
-         node.append(gridsNode);
+    var bgURL = 'url(' + './image/table.png' + ')';
+    this.gridsNode
+      .css({
+        'backgroundImage': bgURL
+      });
+  }
 
-         var titleH = parseInt(gridsT*0.8);
-         var titleT = parseInt(gridsT*0.1);
-         var fontSize = parseInt(titleH*0.6);
-         var titleNode = this.titleNode = $('<div class="lianlian-title"></div>')
-         .css({
-          'width':gridsH +'px',
-          'left':gridsL +'px',
-          'top':titleT +'px',
-          'height':titleH +'px',
-          'lineHeight':titleH +'px',
-          'fontSize':fontSize +'px',
-          'fontWeight':'bold'
-         })
-         this.node.append(titleNode);
-       // }
+  Game.prototype.dom = function() {
 
-     }
+    var node = this.node;
+    var w = this.w = node.width();
+    var h = this.h = node.height();
+    var N = this.N;
+    var nX = this.nX;
+    var nY = this.nY;
 
-     Game.prototype.table = function() {
-       var N = this.N;
-       var gridsNode = this.gridsNode;
+    var gridsHx = this.gridsHx = parseInt((1 - 2 * marginPercent) * w / nX) * nX;
+    var gridsHy = this.gridsHy = this.nX / this.nY * gridsHx;
 
-       var tds = this.tds = [];
-       var gridH = (this.gridsH / N);
+    var gridsL = parseInt(w / 2 - gridsHx / 2 - nX);
+    // var gridsT = parseInt((h - gridsH) / 2*1.5);
+    var gridsT = parseInt(w * titlePhi * 1.1);
+    var gridsNode = this.gridsNode = $('<table class="lianlian-table"></table>')
+      .css({
+        'width': gridsHx + 'px',
+        'height': gridsHy + 'px',
+        'left': gridsL + 'px',
+        'top': gridsT + 'px',
+      });
+    node.append(gridsNode);
 
-       for (var y = 0; y < N; y++) {
-         var tr = $('<tr class="lianlian-tr"></tr>');
-         gridsNode.append(tr);
-         for (var x = 0; x < N; x++) {
-           var td = $('<td class="lianlian-td"></td>')
-             .css({
-               'width': gridH + 'px',
-               'height': gridH + 'px'
-             })
-             .click(function() {
-              console.log('css')
-               var node = $(this);
-               var css = node.attr('class');
+    var titleH = parseInt(w * titlePhi);
+    var titleT = parseInt(gridsT * 0.1);
+    var bgURL = 'url(' + './image/title.png' + ')';
+    var titleNode = this.titleNode =
+      $('<div class="lianlian-title"></div>')
+      .css({
+        'width': gridsHx + 'px',
+        'left': gridsL + 'px',
+        'top': titleT + 'px',
+        'height': titleH + 'px',
+        'lineHeight': titleH + 'px',
+        'backgroundImage': bgURL,
+      })
+    this.node.append(titleNode);
+  }
 
-               if (css == "lianlian-td") {
-                 if (check(node)) {
-                   node
-                     .addClass("lianlian-td-selected");
-                 }
-               } else {
-                 node
-                   .removeClass("lianlian-td-selected");
-               }
-             });
-           tr.append(td);
-           tds.push(td);
-         }
-       }
-     };
+  Game.prototype.table = function() {
+    var nX = this.nX;
+    var nY = this.nY;
+    var N = this.N;
+    var gridsNode = this.gridsNode;
 
-     Game.prototype.title = function() {
-      this.titleNode.text(titleText)
+    var tds = this.tds = [];
+    var gridH = this.gridH = (this.gridsHx / nX);
 
-     }
+    var self = this;
 
-     function randint(arr) {
-       curType = parseInt(Math.random() * arr.length);
-       return arr[curType];
-     }
+    for (var y = 0; y < nY; y++) {
+      var tr = $('<tr class="lianlian-tr"></tr>');
+      gridsNode.append(tr);
+      for (var x = 0; x < nX; x++) {
+        var td = $('<td class="lianlian-td"></td>')
+          .css({
+            'width': gridH + 'px',
+            'height': gridH + 'px'
+          })
+          .data({
+            x: x,
+            y: y
+          })
+          .click(function() {
+            var node = $(this);
+            var css = node.attr('class');
+            if (css == "lianlian-td") {
+              var grid = node.find('.lianlian-grid');
+              if (check(grid)) {
+                grid.addClass("lianlian-grid-selected");
+              }
+            } else {
+              grid.removeClass("lianlian-grid-selected");
+            }
+            if(sucN>=self.nX*self.nY){
+              self.pass();
+            }
+          });
+        tr.append(td);
+        tds.push(td);
+      }
+    }
+  };
 
-     function ranSort(arr) {
-       arr.sort(function(a, b) {
-         return Math.random() > .5 ? -1 : 1;
-       });
-       return arr;
-     }
+  Game.prototype.title = function() {
 
-     Game.prototype.imgs = function() {
-       var N = this.N;
-       var trs = ranSort(this.tds);
+  }
 
-       var gridsNode = this.gridsNode;
+  function randint(arr) {
+    curType = parseInt(Math.random() * arr.length);
+    return arr[curType];
+  }
 
-       for (var k = 0; k < N * N; k += 2) {
-         var url = randint(picList);
+  function ranSort(arr) {
+    arr.sort(function(a, b) {
+      return Math.random() > .5 ? -1 : 1;
+    });
+    return arr;
+  }
 
-         trs[k]
-           .css({
-             'backgroundImage': 'url(' + url + ')'
-           })
-           .attr('imgType', curType);
+  Game.prototype.imgs = function() {
+    var N = this.N;
+    var tds = ranSort(this.tds);
+    var gridH = this.gridH;
 
-         trs[k + 1]
-           .css({
-             'backgroundImage': 'url(' + url + ')'
-           })
-           .attr('imgType', curType);
-       }
-       curType = null;
-     };
+    var gridsNode = this.gridsNode;
 
-     function check(node) {
-      console.log(selected,node)
-       if (!selected) {
-         selected = node;
-         return true;
-       } else if (selected) {
-         if (node.attr('imgType') === selected.attr('imgType')) {
-           node.fadeOut();
-           selected.fadeOut();
-           selected = null
-         } else {
-           return false;
-         }
-       }
-     }
+    for (var k = 0; k < N; k += 2) {
+      var url = randint(picList);
 
-     exports.Game = Game;
-   })(window);
+      var td = tds[k];
+      var grid =
+        $('<div class="lianlian-grid"></div>')
+        .css({
+          'width': (gridH - 4) + 'px',
+          'height': (gridH - 4) + 'px',
+          'backgroundImage': 'url(' + url + ')'
+        })
+        .attr('imgType', curType)
+        .data(td.data())
+      td.append(grid);
+
+      var td = tds[k + 1];
+      var grid1 =
+        $('<div class="lianlian-grid"></div>')
+        .css({
+          'width': (gridH - 4) + 'px',
+          'height': (gridH - 4) + 'px',
+          'backgroundImage': 'url(' + url + ')'
+        })
+        .attr('imgType', curType)
+        .data(td.data());
+
+      td.append(grid1)
+    }
+    curType = null;
+  };
+  
+  function check(node) {
+    if (!selected) {
+      selected = node;
+      return true;
+    } else if (selected) {
+      var obj = selected.data();
+      var obj1 = node.data();
+      if (obj.x === obj1.x && obj.y === obj1.y) {
+        node.removeClass('lianlian-grid-selected');
+        selected = null;
+        return;
+      } else if (node.attr('imgType') === selected.attr('imgType')) {
+        if (link(obj, obj1)) {
+          node.fadeOut();
+          selected.fadeOut();
+          sucN+=2;
+          selected = null
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
+  function link(obj, obj1) {
+    var xFrom = obj.x;
+    var yFrom = obj.y;
+    var xTo = obj1.x;
+    var yTo = obj1.y;
+    // mapGame[x][y]
+    return true;
+  }
+
+  Game.prototype.pass = function(){
+    var w = this.w;
+    var h = this.h;
+    
+    var passPhi = 0.98;
+    var passW = parseInt(w*passPhi);
+    var passL = parseInt(w*(1-passPhi)/2);
+    var passH = passW;
+    var passT = (h-w)/2;
+    var passImg = 'url('+'./image/pass.png' +')';
+
+    var passNode = $('<div class="lianlian-pass"></div>')
+    .css({
+        'width': passW + 'px',
+        'left': passL + 'px',
+        'top': passT + 'px',
+        'height': passH + 'px',
+        'backgroundImage': passImg,      
+    })
+    .click(function(e){
+      $(this).trigger('pass');
+      $(this).fadeOut();
+    })
+    .fadeIn();
+
+    this.node.append(passNode);
+  }
+
+  Game.prototype.clear = function(){
+    this.gridsNode.empty();
+    this.gridsNode.fadeOut();
+    this.titleNode.fadeOut();
+  }
+
+  exports.Game = Game;
+})(window);

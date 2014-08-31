@@ -1,7 +1,7 @@
 (function() {
   var imgUrl = 'http://open-wedding.qiniudn.com/weixin.jpg';
-  var lineLink = 'http://zhouningyi.github.io/experiment/game/ada/';
-  var descContent = "我草demo搞定啦!_+*))*(**()*";
+  var lineLink = 'http://zhouningyi.github.io/experiment/game/ada/index.html';
+  var descContent = "联联看，连连中奖联想手机";
   var shareTitle = '连﹋连﹏抽';
   var appid = '';
 
