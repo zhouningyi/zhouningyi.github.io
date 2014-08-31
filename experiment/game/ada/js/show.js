@@ -7,7 +7,6 @@ var titlePhi = 0.35;
 
   function Show(node) {
     this.node = node;
-    this.bg();
   }
 
   Show.prototype.preLoad = function() {
