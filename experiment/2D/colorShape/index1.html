@@ -23,7 +23,7 @@
 ////////////data////////////
      var cArr = [];
      var index = 0;
-     var iMax = 20;
+     var iMax = 10;
      var jMax = 5;
      for(var i =0;i<iMax;i++){
         for(var j =0;j<jMax;j++){
@@ -39,8 +39,9 @@
        }
      }
 ////////////particle////////////
-
-     var ShapeSystem = new ShapeSystem($('#banner'),cArr);
+///
+     options = {iMax:iMax,jMax:jMax};
+     var ShapeSystem = new ShapeSystem($('#banner'),cArr,options);
      ShapeSystem.render();
 
 ////////////particle////////////
