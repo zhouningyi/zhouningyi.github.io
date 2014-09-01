@@ -5,8 +5,10 @@ var titlePhi = 0.35;
 
   selected = null;
 
-  function Show(node) {
-    this.node = node;
+  function Show(container) {
+    this.container = container;
+    this.index = 0;
+    this.showN = 3;
   }
 
   Show.prototype.preLoad = function() {
@@ -16,29 +18,62 @@ var titlePhi = 0.35;
       var img = new Image();
       img.src = url;
       img.onload = function() {
-        imgList.push(img);
+        imgList.push(this);
       }
     }
   };
 
+  Show.prototype.begin = function() {
+        this.bg();
+        this.slider();
+        this.loading();
+        this.broadCast();
+      }
+
   Show.prototype.bg = function() {
+    var node = this.node = $('<div class="lianlian-show"></div>');
+    this.container.append(node);
     var canvasImg = this.canvasImg = generateSprite('#477', '#8aa', '#dee', 360, 640);
-    this.node.css({
+    node.css({
       backgroundImage: 'url(' + canvasImg + ')'
     })
   }
 
+  Show.prototype.loading = function() {
+    var loading = $('<div class="lianlian-loading"></div>')
+    .text('奖品生成中...');
+    this.node.append(loading);
+  }
+
+  Show.prototype.broadCast = function() {
+    var time = 3000;
+    if(this.index<this.showN){
+      this.img(this.index);
+      setTimeout(this.broadCast.bind(this),time);
+      this.index++;
+    }else{
+      this.clear();
+      return;
+    }
+  }
+
+  Show.prototype.clear = function() {
+    var outTime = 1500;
+    this.node.fadeOut(outTime);
+    setTimeout(function(){this.container.trigger('result')}.bind(this), outTime)
+  }
+
   Show.prototype.slider = function() {
-    var imgList = this.imgList;
-    var showNode = $('<div class="lianlian-slider"></div>');
+    var showNode = this.showNode = $('<div class="lianlian-slider"></div>');
     this.node.append(showNode);
-    var img = $(imgList[0])
-    .css({
+  }
+
+  Show.prototype.img = function(index){
+    var imgList = this.imgList;
+    this.showNode.find('img').fadeOut(1000);
+    this.showNode.append($(imgList[index]).css({
       'width':'100%',
-    }).click(function(){
-      alert('下一步设计中奖后的界面')
-    });
-    showNode.append(img);
+    }).fadeIn(1000));
   }
 
   function generateSprite(colorOut, colorCenter, colorIn, w, h) {

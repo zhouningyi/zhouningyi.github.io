@@ -2,7 +2,7 @@
   var picList = ['./image/logo1.png', './image/logo2.png', './image/logo3.png', './image/logo4.png', './image/logo5.png', './image/logo6.png', './image/logo7.png', './image/logo8.png', './image/logo9.png'];
   var marginPercent = 0.1;
 
-  var titlePhi = 0.35;
+  var titlePhi = 0.363;
   var sucN = 0;
   selected = null;
 
@@ -56,12 +56,17 @@
     var nX = this.nX;
     var nY = this.nY;
 
-    var gridsHx = this.gridsHx = parseInt((1 - 2 * marginPercent) * w / nX) * nX;
-    var gridsHy = this.gridsHy = this.nX / this.nY * gridsHx;
+    var gridsHx = this.gridsHx = 
+    Math.min(parseInt((1 - 2 * marginPercent) * w / nX) * nX, h/(titlePhi+nY/nX)-30);
+    // var gridHx1 = parseInt(h - gridsHx*titlePhi*nX/nY)
+    // gridsHx*titlePhi+gridsHx*nY/nX = 
+    //console.log(parseInt((1 - 2 * marginPercent) * w / nX) * nX, parseInt(w*titlePhi),nX/nY)
+     
 
+    var gridsHy = this.gridsHy = this.nX / this.nY * gridsHx;
     var gridsL = parseInt(w / 2 - gridsHx / 2 - nX);
     // var gridsT = parseInt((h - gridsH) / 2*1.5);
-    var gridsT = parseInt(w * titlePhi * 1.1);
+    var gridsT = parseInt(gridsHx *1* titlePhi);
     var gridsNode = this.gridsNode = $('<table class="lianlian-table"></table>')
       .css({
         'width': gridsHx + 'px',
@@ -71,15 +76,16 @@
       });
     node.append(gridsNode);
 
-    var titleH = parseInt(w * titlePhi);
-    var titleT = parseInt(gridsT * 0.1);
+    
+    // var titleT = parseInt(gridsT * 0.0);
+    var titleH = gridsT;
     var bgURL = 'url(' + './image/title.png' + ')';
     var titleNode = this.titleNode =
       $('<div class="lianlian-title"></div>')
       .css({
         'width': gridsHx + 'px',
         'left': gridsL + 'px',
-        'top': titleT + 'px',
+        'top': '0px',
         'height': titleH + 'px',
         'lineHeight': titleH + 'px',
         'backgroundImage': bgURL,
@@ -111,7 +117,7 @@
             x: x,
             y: y
           })
-          .click(function() {
+          .mousedown(function() {
             var node = $(this);
             var css = node.attr('class');
             if (css == "lianlian-td") {
@@ -230,7 +236,7 @@
     var passT = (h-w)/2;
     var passImg = 'url('+'./image/pass.png' +')';
 
-    var passNode = $('<div class="lianlian-pass"></div>')
+    var passNode = this.passNode = $('<div class="lianlian-pass"></div>')
     .css({
         'width': passW + 'px',
         'left': passL + 'px',
@@ -240,7 +246,7 @@
     })
     .click(function(e){
       $(this).trigger('pass');
-      $(this).fadeOut();
+      $(this).off('click');
     })
     .fadeIn();
 
@@ -250,7 +256,17 @@
   Game.prototype.clear = function(){
     this.gridsNode.empty();
     this.gridsNode.fadeOut();
-    this.titleNode.fadeOut();
+    this.passNode.empty().css({'background':'rgba(0,0,0,0.7)'}).hide();
+    // this.titleNode.fadeOut();
+  }
+
+  Game.prototype.result = function(){
+    var resultNode = this.passNode.show();
+    resultNode.css({
+      'height':'80%'});
+    var imgURL = './image/result.png';
+    var img = $('<img class="lianlian-result-img" src="'+imgURL+'"></img>');
+    resultNode.append(img);
   }
 
   exports.Game = Game;

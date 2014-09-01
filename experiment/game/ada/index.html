@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>连﹋连﹏抽</title>
     <style>
     @import url("./css/main.css");
@@ -16,12 +16,16 @@
     <script>
 
     var game = new Game($('.lianlian-container'),5,6);
+   // setTimeout(function(){game.pass();},200)
     var show = new Show($('.lianlian-container'));
     show.preLoad();
     $('.lianlian-container').on('pass',function(){
         game.clear();
-        show.bg();
-        show.slider();
+        show.begin();
+    });
+    $('.lianlian-container').on('result',function(e){
+        console.log(e);
+        game.result();
     })
     
     // show.bg();
