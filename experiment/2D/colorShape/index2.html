@@ -12,6 +12,7 @@
     <div class="container"><div>
     <script src="./js/lib/color.js"></script>
     <script src="./js/lib/jquery-1.7.1.min.js"></script>
+    <script src="./js/lib/d3.v3.min.js"></script>
 </head>
 
 <body>
@@ -53,16 +54,23 @@
    }
    
    function getSize(distance){
-    var e = 10
-    var k = 400;
-    var phi = -0.5;
+    var d = 120;
     var list = [60,37.5,20,15,12.5,10];
-    distance = parseInt(distance/200);
-    distance = (distance<6)?distance:5;
+
+    distance = (distance/d<6)?distance/d:5;
+    var domain = d3.range(6);
+
+    var y = d3.scale.linear().domain(domain).range(list);
+
+    console.log(y(0.5),y(1.5),y(2));
     // return Math.pow(distance,phi)*k;
-    return list[distance];
+    return y(distance);
    }
+   var cnt = 0;
+   var px = 0;
+   var py = 0;
    canvas.mousemove(function(e){
+    // px = e.pageX;
     render(e.pageX,e.pageY);
    })
     </script>
