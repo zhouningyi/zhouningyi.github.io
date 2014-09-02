@@ -61,6 +61,7 @@ body,div,table{
 .lianlian-pass{
   position: absolute;
   z-index: 100;
+  background-size:100% 100%;
   transition: 0.3s all ease-in-out;
   -webkit-transition: 0.3s all ease-in-out;
 }
@@ -70,6 +71,7 @@ body,div,table{
 }
 
 .lianlian-loading{
+  z-index: 1000001;
   height: 40px;
   line-height: 40px;
   left: 20%;
@@ -89,13 +91,62 @@ body,div,table{
   -o-animation: loading 1.5s ease-in-out infinite;
 }
 .lianlian-result-img{
-  position: absolute;
-  width: 80%;
-  left: 10%
+  position: relative;
+  width: 70%;
+  left: 15%
 }
+
+
 
 .lianlian-show{
   
+}
+.lianlian-input-group{
+  display: inline-table;
+  vertical-align: middle;
+  position: relative;
+}
+.lianlian-checkbox{
+  background: rgba(50,50,50,0.5);
+  position: relative;
+  margin-top:5%; 
+  left:5%;
+  width: 90%;
+  height: auto;
+  padding: 8%;
+  box-shadow:  0px 0px 50px rgba(250,250,250,1);
+}
+.lianlian-win-title{
+  text-align: center;
+  letter-spacing:100%;
+  position: relative;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-size: 36px;
+  font-weight: bold;
+  vertical-align: center;
+  color:#c00;
+  box-shadow:  0px 0px 5px rgba(250,25,2,1);
+  margin: 0px 0px 10px 0px;
+}
+  .lianlian-commit{
+  position: relative;
+  text-align: center;
+  vertical-align: center;
+  margin: 10px 0px 10px 0px;
+  border-radius: 5px;
+  font-weight: bold;
+  margin-right: 0;
+  width: 50%;
+  height: 35px;
+  font-size: 25px;
+  color: #fff;
+  line-height: 35px;
+  background: #c00;
+  box-shadow:  0px 0px 10px rgba(250,25,2,1);
+  margin: 10px 0px 5px 50%;
+  text-shadow:  2px 2px 5px rgba(50,50,50,1);
 }
 @-webkit-keyframes r3d
 {

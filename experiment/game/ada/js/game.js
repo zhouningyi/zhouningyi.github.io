@@ -261,12 +261,64 @@
   }
 
   Game.prototype.result = function(){
+    var bol = true;
+    if(bol){
+      this.win();
+    }else{
+      this.loose();
+    }
+  }
+
+  Game.prototype.win = function(){
     var resultNode = this.passNode.show();
-    resultNode.css({
-      'height':'80%'});
+
     var imgURL = './image/result.png';
-    var img = $('<img class="lianlian-result-img" src="'+imgURL+'"></img>');
-    resultNode.append(img);
+    imgURL = 'url('+imgURL+')';
+    resultNode.css({
+      'top':'0%',
+      'left':'0%',
+      'width':'100%',
+      'height':'100%',
+      'background':'rgba(0,0,0,0.8)',
+      'backgroundImage':imgURL,
+      'backgroundSize':'100%, 100%',
+      'backgroundRepeat':'no-repeat'
+    });
+    
+    var checkBox = 
+    $(
+     '<div class="lianlian-checkbox">\
+     <div class="lianlian-win-title">恭 喜 您 中 奖 了</div>\
+     <div class="input-group">\
+       <input type="text" id="name" class="form-control" placeholder="输入姓名">\
+     </div>\
+     <div class="input-group">\
+       <input type="text" id="adress" class="form-control" placeholder="收货地址">\
+     </div>\
+     <div class="input-group">\
+       <input type="text" id="tel" class="form-control" placeholder="联系电话">\
+     </div>\
+     <div class="lianlian-commit">提 交</div>\
+     </div>'
+    );
+    checkBox.find('.input-group').css('height','30px');
+    checkBox.find('input').css({
+      'display':'inline-block',
+      'margin':'2px',
+      'borderRadius':'5px'
+    });
+    checkBox.find('.lianlian-commit').click(function(e){
+      var name = checkBox.find('#name')[0].value;
+      var adress = checkBox.find('#adress')[0].value;
+      var tel = checkBox.find('#tel')[0].value;
+      if(name&&adress&&tel){
+        alert('成功，电话为：'+tel+', 名字：'+name+'地址：'+adress);
+      }
+    })
+   resultNode.append(checkBox);
+  }
+  Game.prototype.loose = function(){
+
   }
 
   exports.Game = Game;
