@@ -271,6 +271,7 @@
 
   Game.prototype.win = function(){
     var resultNode = this.passNode.show();
+    resultNode.empty();
 
     var imgURL = './image/result.png';
     imgURL = 'url('+imgURL+')';
