@@ -12,12 +12,33 @@
     this.nY = nY;
     this.N = nX * nY;
 
+    this.id();
+
     this.initMap = [];
     this.dom();
     this.bg();
     this.table();
     this.title();
     this.imgs();
+  }
+
+  Game.prototype.id = function() {
+    //@陆扬才 获取openID接口的方法
+    openID = null;
+    var id = openID|| this.time() +'_'+parseInt(Math.random()*100, 10);
+    //@陆扬才 发送openid的方法,这个用户开始玩游戏了
+  }
+  
+  Game.prototype.time = function() {
+    //为获得id而设计的计时器
+      var now = new Date();
+      var time = now.getMonth()+'-'+now.getDate()+'_'+now.getHours()+'-'+now.getMinutes()+'-'+now.getSeconds(); 
+      return time;
+  }
+
+  var curTime = null;
+  Game.prototype.timer = function() {
+
   }
 
   //连连看的抽象图
@@ -62,8 +83,7 @@
     // gridsHx*titlePhi+gridsHx*nY/nX = 
     //console.log(parseInt((1 - 2 * marginPercent) * w / nX) * nX, parseInt(w*titlePhi),nX/nY)
      
-
-    var gridsHy = this.gridsHy = this.nX / this.nY * gridsHx;
+    var gridsHy = this.gridsHy = this.nY / this.nX * gridsHx;
     var gridsL = parseInt(w / 2 - gridsHx / 2 - nX);
     // var gridsT = parseInt((h - gridsH) / 2*1.5);
     var gridsT = parseInt(gridsHx *1* titlePhi);
@@ -75,7 +95,6 @@
         'top': gridsT + 'px',
       });
     node.append(gridsNode);
-
     
     // var titleT = parseInt(gridsT * 0.0);
     var titleH = gridsT;
@@ -117,12 +136,12 @@
             x: x,
             y: y
           })
-          .mousedown(function() {
+          .on('touchstart', function(e) {
             var node = $(this);
             var css = node.attr('class');
             if (css == "lianlian-td") {
               var grid = node.find('.lianlian-grid');
-              if (check(grid)) {
+              if (check(grid, self)) {
                 grid.addClass("lianlian-grid-selected");
               }
             } else {
@@ -153,6 +172,27 @@
     });
     return arr;
   }
+
+  Game.prototype.ranTds = function() {
+    //打乱格子顺序
+    var self = this;
+    
+    var nodes = [];
+    this.gridsNode.find('div').each(function(){
+      var node = $(this);
+      nodes.push(
+        node.clone()
+        .attr('imgType', node.attr('imgType'))
+        .data(node.data())
+        )
+     })
+    this.gridsNode.find('td').empty();
+
+    var tds = ranSort(this.tds);
+    for (var k = 0; k < self.N - sucN; k += 1) {
+        tds[k].append($(nodes[k]));
+    }
+ };
 
   Game.prototype.imgs = function() {
     var N = this.N;
@@ -192,7 +232,7 @@
     curType = null;
   };
   
-  function check(node) {
+  function check(node, self) {
     if (!selected) {
       selected = node;
       return true;
@@ -205,16 +245,17 @@
         return;
       } else if (node.attr('imgType') === selected.attr('imgType')) {
         if (link(obj, obj1)) {
-          node.fadeOut();
-          selected.fadeOut();
+          node.remove();
+          selected.remove();
           sucN+=2;
+          self.ranTds();
           selected = null
         }
       } else {
         return false;
       }
     }
-  }
+  };
 
   function link(obj, obj1) {
     var xFrom = obj.x;
@@ -223,7 +264,7 @@
     var yTo = obj1.y;
     // mapGame[x][y]
     return true;
-  }
+  };
 
   Game.prototype.pass = function(){
     var w = this.w;
@@ -244,42 +285,53 @@
         'height': passH + 'px',
         'backgroundImage': passImg,      
     })
-    .click(function(e){
+    .on('touchstart', function(e){
       $(this).trigger('pass');
-      $(this).off('click');
+      $(this).off('touchstart').off('mousedown').off('click');
     })
-    .fadeIn();
+    .fadeIn(200);
 
     this.node.append(passNode);
-  }
+  };
 
-  Game.prototype.clear = function(){
+  Game.prototype.clean = function(){
     this.gridsNode.empty();
     this.gridsNode.fadeOut();
     this.passNode.empty().css({'background':'rgba(0,0,0,0.7)'}).hide();
-    // this.titleNode.fadeOut();
-  }
+  };
+
+  Game.prototype.clear = function(){
+    this.node.empty();
+  };
 
   Game.prototype.result = function(){
-    var bol = true;
-    if(bol){
-      this.win();
-    }else{
-      this.loose();
-    }
-  }
-
-  Game.prototype.win = function(){
+    //@陆扬才： 是否中奖的接口
+    var bol =(Math.random()>0.4)?false:true;
+    // var bol = false;
     var resultNode = this.passNode.show();
     resultNode.empty();
-
-    var imgURL = './image/result.png';
-    imgURL = 'url('+imgURL+')';
     resultNode.css({
       'top':'0%',
       'left':'0%',
       'width':'100%',
       'height':'100%',
+      'backgroundSize':'100%, 100%',
+      'backgroundRepeat':'no-repeat'
+    });
+    if(bol){
+      this.win();
+    }else{
+      this.loose();
+    }
+  };
+
+  Game.prototype.win = function(){
+    var self = this;
+    var resultNode = this.passNode;
+
+    var imgURL = './image/result.png';
+    imgURL = 'url('+imgURL+')';
+    resultNode.css({
       'background':'rgba(0,0,0,0.8)',
       'backgroundImage':imgURL,
       'backgroundSize':'100%, 100%',
@@ -313,14 +365,44 @@
       var adress = checkBox.find('#adress')[0].value;
       var tel = checkBox.find('#tel')[0].value;
       if(name&&adress&&tel){
-        alert('成功，电话为：'+tel+', 名字：'+name+'地址：'+adress);
+        checkBox.remove();
+        self.restart();
+        //@陆扬才 中奖信息 写入后端的接口;
       }
     })
    resultNode.append(checkBox);
-  }
-  Game.prototype.loose = function(){
+  };
 
-  }
+  Game.prototype.loose = function(){
+    var self = this;
+    var resultNode = this.passNode;
+
+    var imgURL = './image/loose.png';
+    imgURL = 'url('+imgURL+')';
+    resultNode.css({
+      'backgroundColor':'rgba(0,0,0,0.6)',
+      'backgroundImage':imgURL,
+    });
+
+    resultNode.click(function(e){
+      var x = e.pageX/$(this).width();
+      var y = e.pageY/$(this).height();
+      if(x<0.5){
+        self.restart();
+      }
+    })
+  };
+
+  Game.prototype.restart = function(){
+    sucN = 0;
+    this.clear();
+
+    this.dom();
+    this.bg();
+    this.table();
+    this.title();
+    this.imgs();
+  };
 
   exports.Game = Game;
 })(window);

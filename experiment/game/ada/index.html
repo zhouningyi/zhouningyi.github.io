@@ -21,7 +21,8 @@
     var show = new Show($('.lianlian-container'));
     show.preLoad();
     $('.lianlian-container').on('pass',function(){
-        game.clear();
+        alert('-')
+        game.clean();
         show.begin();
     });
     $('.lianlian-container').on('result',function(e){

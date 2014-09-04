@@ -34,8 +34,6 @@ body,div,table{
   border-radius: 10px;
   border: 2px solid #999;
   z-index: 1;
-  /*transition: 0.3s all ease-in-out;*/
-  /*-webkit-transition: 0.3s all ease-in-out;*/
 }
 
 .lianlian-table .lianlian-grid-selected{
