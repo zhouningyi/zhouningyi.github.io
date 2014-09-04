@@ -46,7 +46,7 @@ var titlePhi = 0.35;
   }
 
   Show.prototype.broadCast = function() {
-    var time = 20;
+    var time = 2000;
     if(this.index<this.showN){
       this.img(this.index);
       setTimeout(this.broadCast.bind(this),time);
