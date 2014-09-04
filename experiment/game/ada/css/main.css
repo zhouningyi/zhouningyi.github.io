@@ -60,8 +60,8 @@ body,div,table{
   position: absolute;
   z-index: 100;
   background-size:100% 100%;
-  transition: 0.3s all ease-in-out;
-  -webkit-transition: 0.3s all ease-in-out;
+  transition: 0.1s all ease-in-out;
+  -webkit-transition: 0.1s all ease-in-out;
 }
 
 .lianlian-slider{
