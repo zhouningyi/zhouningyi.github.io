@@ -52,16 +52,22 @@ body,div,table{
   text-align: center;
   vertical-align: middle;
   color: rgba(255,155,55,1);
-  text-shadow: 2px 3px #fff;
+}
+.lianlian-timer{
+  vertical-align: middle;
+  letter-spacing:6px;
+  text-align: center;
   font-weight: bold;
+  color: #c33;
+  text-shadow: 1px 1px 9px #f66;
 }
 
 .lianlian-pass{
   position: absolute;
   z-index: 100;
   background-size:100% 100%;
-  transition: 0.1s all ease-in-out;
-  -webkit-transition: 0.1s all ease-in-out;
+  transition: 0.3s all ease-in-out;
+  -webkit-transition: 0.3s all ease-in-out;
 }
 
 .lianlian-slider{

@@ -18,8 +18,10 @@
     this.dom();
     this.bg();
     this.table();
-    this.title();
     this.imgs();
+
+    startTime = new Date();
+    this.timer();
   }
 
   Game.prototype.id = function() {
@@ -36,10 +38,31 @@
       return time;
   }
 
-  var curTime = null;
+  var startTime = null;
   Game.prototype.timer = function() {
+    curTime = new Date();
+    var ms = curTime.getTime() - startTime.getTime();
+    var s = parseInt(ms/1000, 10);
+    var min = parseInt(s/60, 10);
+    var sec = parseInt(s%60, 10);
+    var milli = parseInt(ms%1000*0.06);
+    milli = (milli<10)?'0'+milli:milli;
+    sec = (sec<10)?'0'+sec:sec;
+    min = (min<10)?'0'+min:min;
 
+    var showTime = min+': '+sec+': ' + milli;
+    this.timerNode.text(showTime);
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    window.animateID = requestAnimationFrame(this.timer.bind(this));
   }
+
+  Game.prototype.stopTimer = function() {
+    var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+    cancelAnimationFrame(window.animateID);
+    this.timerNode.text('');
+  }
+
 
   //连连看的抽象图
   Game.prototype.initMap = function() {
@@ -77,8 +100,10 @@
     var nX = this.nX;
     var nY = this.nY;
 
+    var tinerMin = 50;
+
     var gridsHx = this.gridsHx = 
-    Math.min(parseInt((1 - 2 * marginPercent) * w / nX) * nX, h/(titlePhi+nY/nX)-30);
+    Math.min(parseInt((1 - 2 * marginPercent) * w / nX) * nX, h/(titlePhi+nY/nX)-tinerMin);
     // var gridHx1 = parseInt(h - gridsHx*titlePhi*nX/nY)
     // gridsHx*titlePhi+gridsHx*nY/nX = 
     //console.log(parseInt((1 - 2 * marginPercent) * w / nX) * nX, parseInt(w*titlePhi),nX/nY)
@@ -110,6 +135,21 @@
         'backgroundImage': bgURL,
       })
     this.node.append(titleNode);
+    
+    var timeT = gridsHy + titleH + 5;
+    var timeH = h - timeT;
+    timeH = (timeH<50)?timeH:50;
+    var fontSize = parseInt(timeH*0.75, 10);
+    var timerNode = this.timerNode =$('<div class="lianlian-timer"></div>')
+    .css({
+      'top':timeT + 'px',
+      'height':timeH + 'px',
+      'lineHeight':timeH + 'px',
+      'fontSize':fontSize + 'px',
+      'left':gridsL+'px',
+      'width':gridsHx+'px',
+    })
+    this.node.append(timerNode);
   }
 
   Game.prototype.table = function() {
@@ -136,7 +176,7 @@
             x: x,
             y: y
           })
-          .on('touchstart', function(e) {
+          .on('mousedown', function(e) {
             var node = $(this);
             var css = node.attr('class');
             if (css == "lianlian-td") {
@@ -157,9 +197,6 @@
     }
   };
 
-  Game.prototype.title = function() {
-
-  }
 
   function randint(arr) {
     curType = parseInt(Math.random() * arr.length);
@@ -267,6 +304,8 @@
   };
 
   Game.prototype.pass = function(){
+    this.stopTimer();
+
     var w = this.w;
     var h = this.h;
     
@@ -285,9 +324,9 @@
         'height': passH + 'px',
         'backgroundImage': passImg,      
     })
-    .on('touchstart', function(e){
+    .on('mousedown', function(e){
       $(this).trigger('pass');
-      $(this).off('touchstart').off('mousedown').off('click');
+      $(this).off('mousedown').off('mousedown').off('click');
     })
     .fadeIn(200);
 
@@ -394,13 +433,15 @@
   };
 
   Game.prototype.restart = function(){
-    sucN = 0;
     this.clear();
+
+    sucN = 0;
+    startTime = new Date();
+    this.timer();
 
     this.dom();
     this.bg();
     this.table();
-    this.title();
     this.imgs();
   };
 
