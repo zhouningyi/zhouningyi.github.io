@@ -176,7 +176,7 @@
             x: x,
             y: y
           })
-          .on('mousedown', function(e) {
+          .on('touchstart', function(e) {
             var node = $(this);
             var css = node.attr('class');
             if (css == "lianlian-td") {
@@ -324,9 +324,9 @@
         'height': passH + 'px',
         'backgroundImage': passImg,      
     })
-    .on('mousedown', function(e){
+    .on('touchstart', function(e){
       $(this).trigger('pass');
-      $(this).off('mousedown').off('mousedown').off('click');
+      $(this).off('touchstart').off('touchstart').off('click');
     })
     .fadeIn(200);
 
