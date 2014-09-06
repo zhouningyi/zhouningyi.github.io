@@ -1,5 +1,6 @@
-var titlePhi = 0.35;
-(function(exports) {
+
+define(function(require, exports, module) {
+  var titlePhi = 0.35;
   var picList = ['./image/adv10.png', './image/adv20.png', './image/adv30.png']
   var marginPercent = 0.1;
 
@@ -24,11 +25,11 @@ var titlePhi = 0.35;
   };
 
   Show.prototype.begin = function() {
-        this.bg();
-        this.slider();
-        this.loading();
-        this.broadCast();
-      }
+    this.bg();
+    this.slider();
+    this.loading();
+    this.broadCast();
+  }
 
   Show.prototype.bg = function() {
     var node = this.node = $('<div class="lianlian-show"></div>');
@@ -41,17 +42,17 @@ var titlePhi = 0.35;
 
   Show.prototype.loading = function() {
     var loading = $('<div class="lianlian-loading"></div>')
-    .text('奖品生成中...');
+      .text('奖品生成中...');
     this.node.append(loading);
   }
 
   Show.prototype.broadCast = function() {
     var time = 2000;
-    if(this.index<this.showN){
+    if (this.index < this.showN) {
       this.img(this.index);
-      setTimeout(this.broadCast.bind(this),time);
+      setTimeout(this.broadCast.bind(this), time);
       this.index++;
-    }else{
+    } else {
       this.clear();
       return;
     }
@@ -60,7 +61,9 @@ var titlePhi = 0.35;
   Show.prototype.clear = function() {
     var outTime = 1500;
     this.node.fadeOut(outTime);
-    setTimeout(function(){this.container.trigger('result')}.bind(this), outTime)
+    setTimeout(function() {
+      this.container.trigger('result')
+    }.bind(this), outTime)
   }
 
   Show.prototype.slider = function() {
@@ -68,11 +71,11 @@ var titlePhi = 0.35;
     this.node.append(showNode);
   }
 
-  Show.prototype.img = function(index){
+  Show.prototype.img = function(index) {
     var imgList = this.imgList;
     this.showNode.find('img').fadeOut(1000);
     this.showNode.append($(imgList[index]).css({
-      'width':'100%',
+      'width': '100%',
     }).fadeIn(1000));
   }
 
@@ -99,5 +102,5 @@ var titlePhi = 0.35;
     return canvas.toDataURL();
   }
 
-  exports.Show = Show;
-})(window);
+  module.exports = Show;
+});

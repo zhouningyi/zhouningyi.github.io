@@ -1,10 +1,15 @@
-(function(exports) {
-  var picList = ['./image/logo1.png', './image/logo2.png', './image/logo3.png', './image/logo4.png', './image/logo5.png', './image/logo6.png', './image/logo7.png', './image/logo8.png', './image/logo9.png'];
+define(function(require, exports, module) {
+  var imgBase = './';
+  var picList = ['image/logo1.png', 'image/logo2.png', 'image/logo3.png', 'image/logo4.png', 'image/logo5.png', 'image/logo6.png', './image/logo7.png', 'image/logo8.png', 'image/logo9.png'];
   var marginPercent = 0.1;
 
   var titlePhi = 0.363;
   var sucN = 0;
   selected = null;
+
+  var click = 'touchstart';
+  var click = 'mousedown';
+
 
   function Game(node, nX, nY) {
     this.node = node;
@@ -52,29 +57,16 @@
 
     var showTime = min+': '+sec+': ' + milli;
     this.timerNode.text(showTime);
-    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     window.animateID = requestAnimationFrame(this.timer.bind(this));
   }
 
   Game.prototype.stopTimer = function() {
     var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
     cancelAnimationFrame(window.animateID);
-    this.timerNode.text('');
   }
-
-
-  //连连看的抽象图
-  Game.prototype.initMap = function() {
-    var map = this.map = window.mapGame = [];
-    for (var x = 0; x < this.nX; x++) {
-      for (var y = 0; y < this.nY; y++) {
-        map[x][y] = {
-          'exist': true,
-          'searched': false
-        };
-      }
-    }
+  Game.prototype.cleanTimer = function() {
+    this.timerNode.text('');
   }
 
   Game.prototype.bg = function() {
@@ -149,6 +141,7 @@
       'left':gridsL+'px',
       'width':gridsHx+'px',
     })
+    .text('00: 00: 00');
     this.node.append(timerNode);
   }
 
@@ -176,7 +169,7 @@
             x: x,
             y: y
           })
-          .on('touchstart', function(e) {
+          .on(click, function(e) {
             var node = $(this);
             var css = node.attr('class');
             if (css == "lianlian-td") {
@@ -299,7 +292,6 @@
     var yFrom = obj.y;
     var xTo = obj1.x;
     var yTo = obj1.y;
-    // mapGame[x][y]
     return true;
   };
 
@@ -314,7 +306,7 @@
     var passL = parseInt(w*(1-passPhi)/2);
     var passH = passW;
     var passT = (h-w)/2;
-    var passImg = 'url('+'./image/pass.png' +')';
+    var passImg = 'url('+ imgBase + './image/pass.png' +')';
 
     var passNode = this.passNode = $('<div class="lianlian-pass"></div>')
     .css({
@@ -324,9 +316,9 @@
         'height': passH + 'px',
         'backgroundImage': passImg,      
     })
-    .on('touchstart', function(e){
+    .on(click, function(e){
       $(this).trigger('pass');
-      $(this).off('touchstart').off('touchstart').off('click');
+      $(this).off('click').off(click).off('click');
     })
     .fadeIn(200);
 
@@ -334,6 +326,7 @@
   };
 
   Game.prototype.clean = function(){
+    this.cleanTimer();
     this.gridsNode.empty();
     this.gridsNode.fadeOut();
     this.passNode.empty().css({'background':'rgba(0,0,0,0.7)'}).hide();
@@ -390,7 +383,7 @@
      <div class="input-group">\
        <input type="text" id="tel" class="form-control" placeholder="联系电话">\
      </div>\
-     <div class="lianlian-commit">提 交</div>\
+     <div class="game-notice">提 交</div>\
      </div>'
     );
     checkBox.find('.input-group').css('height','30px');
@@ -399,7 +392,7 @@
       'margin':'2px',
       'borderRadius':'5px'
     });
-    checkBox.find('.lianlian-commit').click(function(e){
+    checkBox.find('.game-notice').click(function(e){
       var name = checkBox.find('#name')[0].value;
       var adress = checkBox.find('#adress')[0].value;
       var tel = checkBox.find('#tel')[0].value;
@@ -445,5 +438,5 @@
     this.imgs();
   };
 
-  exports.Game = Game;
-})(window);
+  module.exports = Game;
+});

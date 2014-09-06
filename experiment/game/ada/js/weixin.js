@@ -1,4 +1,4 @@
-(function() {
+define(function(require, exports, module) {
   var imgUrl = 'http://open-wedding.qiniudn.com/weixin.jpg';
   var lineLink = 'http://zhouningyi.github.io/experiment/game/ada/index.html';
   var descContent = "联联看，连连中，大奖联想手机";
@@ -41,7 +41,17 @@
       //_report('weibo', res.err_msg);
     });
   }
+
+
+
   document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+
+      WeixinJSBridge.invoke('getNetworkType',{},
+    function(e){
+        WeixinJSBridge.log(e.err_msg);
+        alert(JSON.stringify(e));
+      });    
+
     // 发送给好友
     WeixinJSBridge.on('menu:share:appmessage', function(argv) {
       shareFriend();
@@ -55,5 +65,6 @@
       shareWeibo();
     });
   }, false);
-})();
+  // module.exports = weixin;
+});
 
