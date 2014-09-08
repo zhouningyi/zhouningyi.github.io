@@ -10,4 +10,3 @@ app.use(connect.directory(path.join(__dirname, "../")));
 app.use(connect.query());
 app.listen(8888);
 console.log("localhost:8888 run...");
-ds
