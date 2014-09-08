@@ -7,10 +7,9 @@ define(function(require, exports, module) {
   var titlePhi = 0.363;
   var sucN = 0;
   selected = null;
-  console.log(document)
 
   var click = 'touchstart';
-  var click = 'mousedown';
+  // var click = 'mousedown';
 
 
   function Game(node, nX, nY) {
@@ -40,11 +39,11 @@ define(function(require, exports, module) {
           cache: false, 
           dataType: 'json',//杩斿洖鍊肩被鍨�
           success:function(json){   
-          alert(json[1].msg+" "+ json[1].openid);//寮瑰嚭杩斿洖杩囨潵鐨凩ist瀵硅薄
+          alert('openID',json[1].msg+" "+ json[1].openid);//寮瑰嚭杩斿洖杩囨潵鐨凩ist瀵硅薄
           openID = json[1].openid;
                   },
           error:function(e){
-            alert(JSON.stringify(e))
+            // alert(JSON.stringify(e))
           }
          });
 
