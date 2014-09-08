@@ -2,7 +2,7 @@ define(function(require, exports, module) {
  var Detect = require('./detect');
  var Game = require('./game');
  var Show = require('./show');
- var weixin = require('./weixin');
+ require('./weixin');
 
   function Controller(node) {
     this.node = node;
@@ -22,9 +22,8 @@ define(function(require, exports, module) {
 
   Controller.prototype.start = function(){
     var node = this.node;
-    console.log(node)
     var game = new Game(node,5,6);
-    // setTimeout(function(){game.pass();},3100);
+    // setTimeout(function(){game.pass();},100);
     
     var show = new Show(node);
     show.preLoad();

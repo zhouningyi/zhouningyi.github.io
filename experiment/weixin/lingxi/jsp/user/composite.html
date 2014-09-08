@@ -1,0 +1,350 @@
+<!-- <%@page import="org.springframework.security.core.context.*"%>
+<%@page import="org.springframework.security.core.userdetails.UserDetails"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> -->
+<link rel="stylesheet" href="../../css/combine-invest.css">
+<link rel="stylesheet" href="../../css/bootstrap.css">
+<style type="text/css"> 
+ .user-sheet-container {
+ 	width: 100%;
+ 	height: 100%;
+ }
+ .user-sheet-container .line{
+ 	vertical-align: middle;
+ 	height: 40px;
+ 	line-height: 40px;
+ 	color: #f60;
+ }
+ .user-sheet-container .border{
+ 	border-left: 1px solid #eee;
+ 	border-right: 1px solid #eee;
+ 	border-bottom: 1px solid #eee;
+ }
+ .user-sheet-container .title{
+ 	border: 1px solid #eee;
+ 	height: 60px;
+ 	line-height: 60px;
+ 	vertical-align: middle;
+ 	text-align: left;
+ 	padding: 0 0 0 10px;
+ 	color: #fff;
+ 	font-size: 36px;
+ 	color: #f60;
+ }
+ .user-sheet-container .add-btn{
+ 	float:right;
+ 	vertical-align: middle;
+  text-align: center;
+ 	width: 90px;
+ 	margin: 4px 4px 4px 0px;
+ 	height: 30px;
+ 	line-height: 30px;
+ 	border-radius: 5px;
+ 	background: #f60;
+ 	color:#fff;
+ 	font-weight: normal;
+ 	font-size:18px;
+ 	cursor: pointer;
+ }
+  .user-sheet-container .add-btn:hover{
+  	opacity: 0.9;
+  }
+ .user-sheet-container .name{
+ 	background: #eee;
+ 	font-weight: bold;
+ 	font-size: 18px;
+ 	text-align: left;
+ 	padding: 0 0 0 20px;
+ }
+ .user-sheet-container .node-lines{
+ 	margin: 0;
+ 	padding: 0;
+ 	min-height: 40px;
+ }
+
+.dialog {
+ 	width: 200px;
+ 	height: 100%;
+ }
+ 
+</style>
+<div class="user-sheet-container">
+  <div class="title">灵犀组合</div>
+	<div class="line name border">盈亏排名</div>
+	<div id="yingkui" class="node-lines border"></div> 
+	<div class="line name border">持仓<div class="add-btn">+股票</div></div>
+	<div id="chicang" class="node-lines border"></div>
+	<div class="line name border">收益追踪</div>
+	<div id="shouyi" class="node-lines border"></div>
+	<div class="line name border">交易明细</div>
+	<div id="jiaoyi" class="node-lines border"></div>
+</div>
+
+<div class="modal fade in" id="addStockModal" tabindex="-1" role="dialog" aria-hidden="false">
+	<div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel">买卖</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<form class="form-horizontal" role="form">
+		      	<div class="form-group">
+				    <label for="stockCode" class="col-sm-2 control-label">代码</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control" id="stockCode" placeholder="代码">
+				    </div>
+			  	</div>
+			  	<div class="form-group">
+				    <label for="price" class="col-sm-2 control-label">价格</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control" id="price" placeholder="价格">
+				    </div>
+			  	</div>
+			  	<div class="form-group">
+			  		<label for="amount" class="col-sm-2 control-label">数量</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control" id="amount" placeholder="数量">
+				    </div>
+			  	</div>
+			  </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	        <button type="button" id="saveTx"class="btn btn-primary">保存</button>
+	      </div>
+	    </div>
+	</div>
+
+	<!-- /.modal-dialog -->
+<!-- <%
+Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+boolean isLogin =false;
+String username="";
+String contextPath = request.getContextPath();
+Integer userId=0;
+if (principal instanceof UserDetails) {
+	UserDetails ud = (UserDetails)principal;
+    username = ud.getUsername();   
+    isLogin=true;
+    userId= (Integer)session.getAttribute("userId");
+} else {
+    username = principal.toString();
+}
+%> -->
+
+<script type="text/javascript" src="../../js/lib/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="../../js/table.js"></script>
+<script type="text/javascript" src="../../js/lib/bootstrap.min.js"></script>
+<!-- <script type="text/javascript" src="http://hq.sinajs.cn/list=sh601006" charset="utf-8"></script> -->
+<script type="text/javascript">
+
+var node = $('.user-sheet-container');
+
+//////////////////////////@杨总 +userID 取得的方法
+userID = '1';
+base = 'http://115.29.15.119:8080';
+
+//////////////////////////
+function yingkui(){
+var table = new Table(node.find('#yingkui'));
+var dataHead = 
+[{
+	name: '当日盈亏',
+	type: 'text',
+	key: function(obj) {
+		return obj.stock.name
+	}
+},
+{
+	name: '股票名',
+	type: 'text',
+	key: function(obj) {
+		return obj.stock.name
+	}
+},
+{
+	name: '总收益率',
+	type: 'text',
+	key: function(obj) {
+		return obj.stock.name
+	}
+},
+{
+	name: '仓位',
+	type: 'text',
+	key: function(obj) {
+		return obj.stock.name
+	}
+},
+{
+	name: '总资产',
+	type: 'text',
+	key: function(obj) {
+		return obj.stock.name
+	}
+},
+{
+	name: '排名',
+	type: 'text',
+	key: function(obj) {
+		return obj.stock.name
+	}
+}];
+
+var url = base + '/lx-web/rest/user/' + userID + '/composite';
+$.ajax({
+      type:"GET", //璇锋眰鏂瑰紡
+      url:url,
+      dataType: 'jsonp',//杩斿洖鍊肩被鍨�
+      success:function(json){   
+      	console.log(json)
+              },
+      error:function(e){
+        alert(JSON.stringify(e))
+  }
+ });
+table.dataHead(dataHead);
+var dataLines = [[1,2,2,2,3,4],[11,21,22,2,31,4],[11,21,22,2,31,4],[11,21,22,2,31,4],[11,21,22,2,31,4]];
+table.dataLines(dataLines);
+table.render();
+
+console.log(dataHead);
+}
+
+//////////////////////////////
+function chicang(){
+// alert(encodeURIComponent)
+  
+	var urlBase = 'http://hq.sinajs.cn/list=' ;
+	$('#saveTx').click(function(e){
+		var stockName = 'sh000001';
+
+		var script = document.createElement('script');
+		script.src = urlBase + stockName;
+		document.body.appendChild(script);
+
+		function getData(){
+			var data = window['hq_str_'+stockName];
+			if(!data){
+				setTimeout(getData,100);
+			}else{
+				render(data);
+			}
+		}
+
+		function processing(d){
+			var ds = d.split(',');
+      var data;
+			alert(data);
+		}
+
+		function render(d){
+			data = processing(d);
+		}
+
+		getData();
+
+		// $.ajax({
+  //     'type': "GET",
+  //     'dataType': 'html',
+  //     'url': url,
+  //     'timeout': 2000, 
+  //     'cache':"false",
+  //     // 'contentType':'application/x-javascript; charset=UTF-8',
+  //     'success': function(data) {
+  //     	alert(data, '--');
+  //     	console.log(data, '--');
+  //     },
+  //     'error':function(e){
+  //     	alert(JSON.stringify(e));
+  //     }
+		// });
+	});
+}
+//////////////////////////////
+function shouyi(){
+
+}
+//////////////////////////////
+function jiaoyi(){
+
+}
+
+yingkui();
+chicang();
+shouyi();
+jiaoyi();
+
+$('.add-btn').click(function(){
+	$('#addStockModal').modal("toggle");
+});
+
+// var userId = <%=userId%>;
+// var compositeId = 0;
+// var balanceUrl = '/lx-web/rest/user/' + userId + '/composite';
+
+// $.get(balanceUrl, function(data) {
+// 	$.each(data,function(){
+// 		var template = '<tr><td>' + this.dailyReturn + '</td><td>' + this.floatReturn + '</td><td>'
+// 						+ this.totalReturnRate*100 + '%</td><td>' + this.stockPosition*100 + '%</td><td>'
+// 						+ this.totalValue + '</td><td>' + '&nbsp;'
+// 						+ '</td></tr>';
+// 		$('table.balance tbody').append(template);
+		
+// 		compositeId = this.id;
+// 		getCompositeStock(compositeId);
+// 		getCompositeTx(compositeId);
+// 	});
+// });
+
+
+
+// function getCompositeStock(compositeId){
+// 	var url = '/lx-web/rest/composite/' + compositeId + '/stock';
+// 	$.get(url, function(data) {
+// 		console.log(data);
+// 		$.each(data,function(){
+// 			var changeRate= this.stock.todayChangeRate*100;
+			
+// 			var template = '<tr><td>' + this.stock.name + '</td><td>' + this.price + '</td><td>'
+// 							+ this.stock.todayChange + '</td><td>' + changeRate.toFixed(2) + '%</td><td>'
+// 							+ this.costPrice + '</td><td>' + this.amount  + '</td><td>' + this.totolValue + '</td><td>'
+// 							+ this.floatReturn + '</td><td>' + this.floatReturnRate*100 
+// 							+ '%</td></tr>';
+// 			$('table.stock tbody').append(template);
+// 		});
+// 	});
+// }
+
+// function getCompositeTx(compositeId){
+// 	var txUrl = '/lx-web/rest/composite/' + compositeId + '/transaction';
+// 	$.get(txUrl, function(data) {
+// 		$.each(data,function(){
+// 			var template = '<tr><td>' + this.date + '</td><td>' + this.stock.name + '</td><td>'
+// 							+ this.price + '</td><td>' + this.amount + '</td><td>'
+// 							+ this.stock.price + '</td><td>' +  this.totalValue 
+// 							+ '</td></tr>';
+// 			$('table.transaction tbody').append(template);
+// 		});
+// 	});
+// }
+
+// $('#saveTx').click(function(){
+// 	var stockCode = $('#stockCode').val();
+// 	var price = $('#price').val();
+// 	var amount = $('#amount').val();
+// 	$.ajax({
+// 		  url:'/lx-web/rest/composite/transaction',
+// 		  type:'POST',
+// 		  data: JSON.stringify({ 
+// 			  	  stockCode : stockCode ,
+// 			  	  price : price,
+// 			  	  amount : amount,
+// 			  	  compositeId : compositeId}),
+// 		  contentType:'application/json; charset=utf-8',
+// 		  dataType:'json'
+// 	}).always(function() {
+// 	   $('#addStockModal').modal('hide');
+// 	});
+// });
+</script>

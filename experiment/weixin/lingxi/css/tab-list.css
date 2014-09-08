@@ -1,0 +1,86 @@
+
+        	.tab-list li{
+        		list-style-type:none;
+        		float:left;
+        		padding:10px;
+        		font-family:"Microsoft YaHei";
+        		font-size:20px;
+        		color:#000;
+        		background-color:#8fe0ff;
+        	}
+        	
+        	.tab-list .tab li{
+        		border-radius:5px 5px 0 0;
+        		padding:10px 30px;
+        		margin-right:20px;
+        	}
+        	
+        	.tab-list ul{
+        		clear:both;
+        		margin:0px;
+        	}
+        	
+        	.tab-list li.active{
+        		background-color:#f8f8f8;
+        	}
+        	
+        	.tab-list ul.tab {
+        		width:100%;
+        		padding-left:0px;
+        		cursor:pointer;
+        	}
+        	
+        	.tab-list ul{
+        		padding-left:0px;
+        	}
+        	
+        	.tab-list .tab li {
+        		
+        	}
+        	
+        	.tab-list .tab li:last-child {
+        		margin-right:0px;
+        	}
+        	
+        	.tab-list .content{
+        		background-color:#f8f8f8;
+        		clear:both;
+        	}
+        	
+        	.tab-list ul.list li{
+        	
+        	}
+        	
+        	.tab-list ul.head li{
+        		width:67px;
+        	}
+        	
+        	.tab-list ul.list li,
+        	.tab-list ul.head li,
+        	.tab-list ul.footer li{
+        		background-color:#f8f8f8;
+        		color:#777;
+        		font-size:14px;
+        		float:left;
+        		padding:3px;
+        		margin:0px;
+        		margin-right:3px;
+        		min-height:50px;
+        	}
+        	
+        	.tab-list .head ul li{
+        		font-size:16px;
+        		height:25px;
+        		font-family:SimSun;
+        	}
+        	
+        	.tab-list .footer{
+        		height:10px;
+        		background-color:#e5e6e6;
+        		width:100%;
+        	}
+        	
+        	.tab-list ul.list a{
+        		color: #428bca;
+        		text-decoration:underline
+        	}

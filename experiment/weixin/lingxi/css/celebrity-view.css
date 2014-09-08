@@ -1,0 +1,139 @@
+.celebrity-profile{
+	background-color:#cccccc;
+	border-radius:5px;
+}
+
+.celebrity-profile .person-photo{
+    height:80px;
+    width:80px;
+    margin:20px;
+    border-radius: 50%;
+    border:3px solid white;
+}
+
+.celebrity-profile span.attention-btn.followed{
+	margin:0 10px 10px;
+	background-color:grey;
+}
+
+.celebrity-profile div,
+.celebrity-profile h4,
+.celebrity-profile h5,
+.celebrity-profile h6{
+	color:black;
+}
+
+.celebrity-profile span.attention-btn{
+	display:inline-block;
+	background:#28bbf2;
+	color:#fff;
+	height:25px;
+	border-radius:5px;
+	font-weight:bold;
+	line-height:25px;
+	padding:0 20px;
+	margin:0 20px 10px;
+	cursor:pointer;
+}
+
+.celebrity-profile .progress.orange{
+	background-color:#ffffee;
+}
+
+.celebrity-profile .progress.orange .progress-bar{
+	background-color:orange;
+}
+
+.celebrity-profile .progress.red{
+	background-color:#ffeeff;
+}
+
+.celebrity-profile .progress.red .progress-bar{
+	background-color:red;
+}
+
+.celebrity-profile .progress.blue{
+	background-color:#eeffff;
+}
+
+.celebrity-profile .progress.blue .progress-bar{
+	background-color:blue;
+}
+
+.tab-title{
+	border-bottom:2px solid #cccccc
+}
+
+.tab-title h3{
+	color:black;
+	margin-bottom:0px;
+	margin-top:10px;
+}
+
+.tab-title h3 span{
+	display:inline-block;
+	padding:0px 20px;
+	cursor:pointer;
+}
+
+.tab-title h3 span.active{
+	border-bottom:2px solid #28bbf2
+}
+
+.artical-container .artical-item{
+	width:90%;
+	border-bottom:1px solid #cccccc;
+	margin:auto;
+	margin-top:20px;
+}
+
+.artical-container .artical-item h4{
+	color:black;
+	margin:20px 0px;
+	font-size: 16px;
+	
+}
+
+.artical-container .artical-item .artical-infos{
+	padding-left:20px;
+}
+
+.artical-container .artical-item .artical-infos h4{
+	color:black;
+	margin:20px 0px;
+	font-size: 16px;
+	font-weight:bold;
+}
+
+.artical-container .artical-item .artical-infos div{
+	margin-bottom:20px;
+}
+
+.artical-container .artical-item .rate .total-rate{
+	color: #f39800;
+    font-weight: bold;
+    margin-top:20px;
+}
+
+.artical-container .artical-item .rate span {
+    display: inline-block;
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+    margin-right: 20px;
+}
+
+.artical-container .artical-item .rate span.more-info {
+    background-color: #cccccc;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    float: right;
+    padding: 5px;
+}
+
+.artical-container .form-group .more-item{
+    background-color:orange;
+    height:20px;
+    text-align:center;
+    cursor:pointer;
+}

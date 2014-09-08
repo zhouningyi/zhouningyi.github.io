@@ -1,4 +1,5 @@
 define(function(require, exports, module) {
+
   var imgBase = './';
   var picList = ['image/logo1.png', 'image/logo2.png', 'image/logo3.png', 'image/logo4.png', 'image/logo5.png', 'image/logo6.png', './image/logo7.png', 'image/logo8.png', 'image/logo9.png'];
   var marginPercent = 0.1;
@@ -6,6 +7,7 @@ define(function(require, exports, module) {
   var titlePhi = 0.363;
   var sucN = 0;
   selected = null;
+  console.log(document)
 
   var click = 'touchstart';
   var click = 'mousedown';
@@ -32,6 +34,20 @@ define(function(require, exports, module) {
   Game.prototype.id = function() {
     //@陆扬才 获取openID接口的方法
     openID = null;
+    $.ajax({
+          type:"GET", //璇锋眰鏂瑰紡
+          url:"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx89452c389f14bcd4&redirect_uri=http%3A%2F%2Fweixinlyc.jd-app.com/ServletGetOpenid&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect",//璇锋眰璺緞
+          cache: false, 
+          dataType: 'json',//杩斿洖鍊肩被鍨�
+          success:function(json){   
+          alert(json[1].msg+" "+ json[1].openid);//寮瑰嚭杩斿洖杩囨潵鐨凩ist瀵硅薄
+          openID = json[1].openid;
+                  },
+          error:function(e){
+            alert(JSON.stringify(e))
+          }
+         });
+
     var id = openID|| this.time() +'_'+parseInt(Math.random()*100, 10);
     //@陆扬才 发送openid的方法,这个用户开始玩游戏了
   }
@@ -70,13 +86,13 @@ define(function(require, exports, module) {
   }
 
   Game.prototype.bg = function() {
-    var bgURL = 'url(' + './image/bg.png' + ')';
+    var bgURL = 'url(' + imgBase + 'image/bg.png' + ')';
     this.node
       .css({
         'backgroundImage': bgURL
       });
 
-    var bgURL = 'url(' + './image/table.png' + ')';
+    var bgURL = 'url(' + imgBase + 'image/table.png)';
     this.gridsNode
       .css({
         'backgroundImage': bgURL
@@ -115,7 +131,7 @@ define(function(require, exports, module) {
     
     // var titleT = parseInt(gridsT * 0.0);
     var titleH = gridsT;
-    var bgURL = 'url(' + './image/title.png' + ')';
+    var bgURL = 'url(' + imgBase + 'image/title.png' + ')';
     var titleNode = this.titleNode =
       $('<div class="lianlian-title"></div>')
       .css({
@@ -361,8 +377,7 @@ define(function(require, exports, module) {
     var self = this;
     var resultNode = this.passNode;
 
-    var imgURL = './image/result.png';
-    imgURL = 'url('+imgURL+')';
+    imgURL = 'url('+ imgBase +'image/result.png)';
     resultNode.css({
       'background':'rgba(0,0,0,0.8)',
       'backgroundImage':imgURL,
@@ -409,7 +424,7 @@ define(function(require, exports, module) {
     var self = this;
     var resultNode = this.passNode;
 
-    var imgURL = './image/loose.png';
+    var imgURL = imgBase + 'image/loose.png';
     imgURL = 'url('+imgURL+')';
     resultNode.css({
       'backgroundColor':'rgba(0,0,0,0.6)',

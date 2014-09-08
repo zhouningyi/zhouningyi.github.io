@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>连连中手机</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" chaset="utf-8">
+    <title>连连看</title>
     <style>
     @import url("./css/bootstrap.css");
     @import url("./css/main.css");
@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="container"></div>
+    <script src="./js/weixinApi.js"></script>
     <script src="./lib/jquery-1.11.0.js"></script>
     <script src="./js/seajs.config.js/seajs/2.1.1/sea.js"></script>
 
@@ -18,13 +19,11 @@
     <script src="js/detect.js"></script>
     <script src="js/controller.js"></script> -->
     <script>
-
    
     seajs.config({
         base: "./js/",
         alias: {
         // "jquery": "jquery-2.0.3.min.js",
-        // "three": "three.min"
         }
       });
 seajs.use("./js/main");////
