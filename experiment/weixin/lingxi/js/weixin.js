@@ -53,6 +53,5 @@
       Api.generalShare(wxData, wxCallbacks);
     });
 
-  });
   exports.WeixinApi = WeixinApi;
 })(window);
