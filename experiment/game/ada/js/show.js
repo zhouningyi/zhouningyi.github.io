@@ -47,7 +47,7 @@ define(function(require, exports, module) {
   }
 
   Show.prototype.broadCast = function() {
-    var time = 2000;
+    var time = 200;
     if (this.index < this.showN) {
       this.img(this.index);
       setTimeout(this.broadCast.bind(this), time);

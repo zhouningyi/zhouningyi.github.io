@@ -1,4 +1,5 @@
 define(function(require, exports, module) {
+  var Detect = require('./detect');
 
   var imgBase = './';
   var picList = ['image/logo1.png', 'image/logo2.png', 'image/logo3.png', 'image/logo4.png', 'image/logo5.png', 'image/logo6.png', './image/logo7.png', 'image/logo8.png', 'image/logo9.png'];
@@ -8,8 +9,10 @@ define(function(require, exports, module) {
   var sucN = 0;
   selected = null;
 
+  var idObj = window.idObj = {};
+
   var click = 'touchstart';
-  // var click = 'mousedown';
+  var click = 'mousedown';
 
 
   function Game(node, nX, nY) {
@@ -17,6 +20,8 @@ define(function(require, exports, module) {
     this.nX = nX;
     this.nY = nY;
     this.N = nX * nY;
+
+    this.detect = new Detect();
 
     this.id();
 
@@ -29,56 +34,65 @@ define(function(require, exports, module) {
     startTime = new Date();
     this.timer();
   }
+  //add start by @陆扬才
+  function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+  }
 
   Game.prototype.id = function() {
     //@陆扬才 获取openID接口的方法
+    var code = getQueryString("code");
+    var d = this.detect.info();
     openID = null;
+    var url = base + '/ServletGetOpenid?platform=' + d.platform + '&product=' + d.product + '&vendor=' + d.vendor + '&code=' + code;
     $.ajax({
-          type:"GET", //璇锋眰鏂瑰紡
-          url:"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx89452c389f14bcd4&redirect_uri=http%3A%2F%2Fweixinlyc.jd-app.com/ServletGetOpenid&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect",//璇锋眰璺緞
-          cache: false, 
-          dataType: 'json',//杩斿洖鍊肩被鍨�
-          success:function(json){   
-          alert('openID',json[1].msg+" "+ json[1].openid);//寮瑰嚭杩斿洖杩囨潵鐨凩ist瀵硅薄
-          openID = json[1].openid;
-                  },
-          error:function(e){
-            // alert(JSON.stringify(e))
-          }
-         });
-
-    var id = openID|| this.time() +'_'+parseInt(Math.random()*100, 10);
-    //@陆扬才 发送openid的方法,这个用户开始玩游戏了
+      type: "GET",
+      url: url, //"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx89452c389f14bcd4&redirect_uri=http%3A%2F%2Fweixinlyc.jd-app.com/ServletGetOpenid&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect",//璇锋眰璺緞
+      cache: false,
+      data: d,
+      dataType: 'jsonp',
+      success: function(json) {
+        idObj.uuid = json[0].uuid;
+        idObj.openid = json[0].openid;
+      },
+      error: function(e) {
+        alert(JSON.stringify(e))
+      }
+    });
   }
-  
+
   Game.prototype.time = function() {
     //为获得id而设计的计时器
-      var now = new Date();
-      var time = now.getMonth()+'-'+now.getDate()+'_'+now.getHours()+'-'+now.getMinutes()+'-'+now.getSeconds(); 
-      return time;
+    var now = new Date();
+    var time = now.getMonth() + '-' + now.getDate() + '_' + now.getHours() + '-' + now.getMinutes() + '-' + now.getSeconds();
+    return time;
   }
 
   var startTime = null;
   Game.prototype.timer = function() {
     curTime = new Date();
     var ms = curTime.getTime() - startTime.getTime();
-    var s = parseInt(ms/1000, 10);
-    var min = parseInt(s/60, 10);
-    var sec = parseInt(s%60, 10);
-    var milli = parseInt(ms%1000*0.06);
-    milli = (milli<10)?'0'+milli:milli;
-    sec = (sec<10)?'0'+sec:sec;
-    min = (min<10)?'0'+min:min;
+    var s = parseInt(ms / 1000, 10);
+    var min = parseInt(s / 60, 10);
+    var sec = parseInt(s % 60, 10);
+    var milli = parseInt(ms % 1000 * 0.06);
+    milli = (milli < 10) ? '0' + milli : milli;
+    sec = (sec < 10) ? '0' + sec : sec;
+    min = (min < 10) ? '0' + min : min;
 
-    var showTime = min+': '+sec+': ' + milli;
-    this.timerNode.text(showTime);
-    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    var showTime = min + ': ' + sec + ': ' + milli;
+    // this.timerNode.text(showTime);
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     window.animateID = requestAnimationFrame(this.timer.bind(this));
   }
 
   Game.prototype.stopTimer = function() {
     var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
     cancelAnimationFrame(window.animateID);
+    return parseInt((curTime.getTime() - startTime.getTime()) / 1000);
   }
   Game.prototype.cleanTimer = function() {
     this.timerNode.text('');
@@ -109,16 +123,16 @@ define(function(require, exports, module) {
 
     var tinerMin = 50;
 
-    var gridsHx = this.gridsHx = 
-    Math.min(parseInt((1 - 2 * marginPercent) * w / nX) * nX, h/(titlePhi+nY/nX)-tinerMin);
+    var gridsHx = this.gridsHx =
+      Math.min(parseInt((1 - 2 * marginPercent) * w / nX) * nX, h / (titlePhi + nY / nX) - tinerMin);
     // var gridHx1 = parseInt(h - gridsHx*titlePhi*nX/nY)
     // gridsHx*titlePhi+gridsHx*nY/nX = 
     //console.log(parseInt((1 - 2 * marginPercent) * w / nX) * nX, parseInt(w*titlePhi),nX/nY)
-     
+
     var gridsHy = this.gridsHy = this.nY / this.nX * gridsHx;
     var gridsL = parseInt(w / 2 - gridsHx / 2 - nX);
     // var gridsT = parseInt((h - gridsH) / 2*1.5);
-    var gridsT = parseInt(gridsHx *1* titlePhi);
+    var gridsT = parseInt(gridsHx * 1 * titlePhi);
     var gridsNode = this.gridsNode = $('<table class="lianlian-table"></table>')
       .css({
         'width': gridsHx + 'px',
@@ -127,7 +141,7 @@ define(function(require, exports, module) {
         'top': gridsT + 'px',
       });
     node.append(gridsNode);
-    
+
     // var titleT = parseInt(gridsT * 0.0);
     var titleH = gridsT;
     var bgURL = 'url(' + imgBase + 'image/title.png' + ')';
@@ -142,21 +156,21 @@ define(function(require, exports, module) {
         'backgroundImage': bgURL,
       })
     this.node.append(titleNode);
-    
+
     var timeT = gridsHy + titleH + 5;
     var timeH = h - timeT;
-    timeH = (timeH<50)?timeH:50;
-    var fontSize = parseInt(timeH*0.75, 10);
-    var timerNode = this.timerNode =$('<div class="lianlian-timer"></div>')
-    .css({
-      'top':timeT + 'px',
-      'height':timeH + 'px',
-      'lineHeight':timeH + 'px',
-      'fontSize':fontSize + 'px',
-      'left':gridsL+'px',
-      'width':gridsHx+'px',
-    })
-    .text('00: 00: 00');
+    timeH = (timeH < 50) ? timeH : 50;
+    var fontSize = parseInt(timeH * 0.75, 10);
+    var timerNode = this.timerNode = $('<div class="lianlian-timer"></div>')
+      .css({
+        'top': timeT + 'px',
+        'height': timeH + 'px',
+        'lineHeight': timeH + 'px',
+        'fontSize': fontSize + 'px',
+        'left': gridsL + 'px',
+        'width': gridsHx + 'px',
+      })
+      .text('00: 00: 00');
     this.node.append(timerNode);
   }
 
@@ -195,7 +209,7 @@ define(function(require, exports, module) {
             } else {
               grid.removeClass("lianlian-grid-selected");
             }
-            if(sucN>=self.nX*self.nY){
+            if (sucN >= self.nX * self.nY) {
               self.pass();
             }
           });
@@ -221,23 +235,23 @@ define(function(require, exports, module) {
   Game.prototype.ranTds = function() {
     //打乱格子顺序
     var self = this;
-    
+
     var nodes = [];
-    this.gridsNode.find('div').each(function(){
+    this.gridsNode.find('div').each(function() {
       var node = $(this);
       nodes.push(
         node.clone()
         .attr('imgType', node.attr('imgType'))
         .data(node.data())
-        )
-     })
+      )
+    })
     this.gridsNode.find('td').empty();
 
     var tds = ranSort(this.tds);
     for (var k = 0; k < self.N - sucN; k += 1) {
-        tds[k].append($(nodes[k]));
+      tds[k].append($(nodes[k]));
     }
- };
+  };
 
   Game.prototype.imgs = function() {
     var N = this.N;
@@ -276,7 +290,7 @@ define(function(require, exports, module) {
     }
     curType = null;
   };
-  
+
   function check(node, self) {
     if (!selected) {
       selected = node;
@@ -292,7 +306,7 @@ define(function(require, exports, module) {
         if (link(obj, obj1)) {
           node.remove();
           selected.remove();
-          sucN+=2;
+          sucN += 2;
           self.ranTds();
           selected = null
         }
@@ -310,83 +324,101 @@ define(function(require, exports, module) {
     return true;
   };
 
-  Game.prototype.pass = function(){
-    this.stopTimer();
-
+  Game.prototype.pass = function() {
     var w = this.w;
     var h = this.h;
-    
+
     var passPhi = 0.98;
-    var passW = parseInt(w*passPhi);
-    var passL = parseInt(w*(1-passPhi)/2);
+    var passW = parseInt(w * passPhi);
+    var passL = parseInt(w * (1 - passPhi) / 2);
     var passH = passW;
-    var passT = (h-w)/2;
-    var passImg = 'url('+ imgBase + './image/pass.png' +')';
+    var passT = (h - w) / 2;
+    var passImg = 'url(' + imgBase + './image/pass.png' + ')';
 
     var passNode = this.passNode = $('<div class="lianlian-pass"></div>')
-    .css({
+      .css({
         'width': passW + 'px',
         'left': passL + 'px',
         'top': passT + 'px',
         'height': passH + 'px',
-        'backgroundImage': passImg,      
-    })
-    .on(click, function(e){
-      $(this).trigger('pass');
-      $(this).off('click').off(click).off('click');
-    })
-    .fadeIn(200);
+        'backgroundImage': passImg,
+      })
+      .on(click, function(e) {
+        $(this).trigger('pass');
+        $(this).off(click);
+      })
+      .fadeIn(100);
 
     this.node.append(passNode);
   };
 
-  Game.prototype.clean = function(){
-    this.cleanTimer();
+  Game.prototype.clean = function() {
+
     this.gridsNode.empty();
     this.gridsNode.fadeOut();
-    this.passNode.empty().css({'background':'rgba(0,0,0,0.7)'}).hide();
+    this.passNode.empty().css({
+      'background': 'rgba(0,0,0,0.7)'
+    }).hide();
   };
 
-  Game.prototype.clear = function(){
+  var win = false;
+  var prizeNames = ['']
+  Game.prototype.price = function() {
+    var self = this;
+    t = this.stopTimer();
+    var url = base + '/ServletWinPrice?openid=' + idObj.openid + '&uuid=' + idObj.uuid + '&optime=' + t;
+    $.ajax({
+      type: "GET",
+      url: url,
+      cache: false,
+      dataType: 'jsonp',
+      success: function(json) {
+        win = json[0].ifwin;
+      },
+      error: function(e) {
+        alert(JSON.stringify(e));
+      }
+    });
+  }
+
+  Game.prototype.clear = function() {
     this.node.empty();
   };
 
-  Game.prototype.result = function(){
-    //@陆扬才： 是否中奖的接口
-    var bol =(Math.random()>0.4)?false:true;
-    // var bol = false;
+  Game.prototype.result = function() {
     var resultNode = this.passNode.show();
     resultNode.empty();
     resultNode.css({
-      'top':'0%',
-      'left':'0%',
-      'width':'100%',
-      'height':'100%',
-      'backgroundSize':'100%, 100%',
-      'backgroundRepeat':'no-repeat'
+      'top': '0%',
+      'left': '0%',
+      'width': '100%',
+      'height': '100%',
+      'backgroundSize': '100%, 100%',
+      'backgroundRepeat': 'no-repeat'
     });
-    if(bol){
+    win = 'true'
+    if (win == 'true') {
       this.win();
-    }else{
+    } else {
       this.loose();
     }
   };
 
-  Game.prototype.win = function(){
+  Game.prototype.win = function() {
     var self = this;
     var resultNode = this.passNode;
 
-    imgURL = 'url('+ imgBase +'image/result.png)';
+    imgURL = 'url(' + imgBase + 'image/result.png)';
     resultNode.css({
-      'background':'rgba(0,0,0,0.8)',
-      'backgroundImage':imgURL,
-      'backgroundSize':'100%, 100%',
-      'backgroundRepeat':'no-repeat'
+      'background': 'rgba(0,0,0,0.8)',
+      'backgroundImage': imgURL,
+      'backgroundSize': '100%, 100%',
+      'backgroundRepeat': 'no-repeat'
     });
-    
-    var checkBox = 
-    $(
-     '<div class="lianlian-checkbox">\
+
+    var checkBox =
+      $(
+        '<div class="lianlian-checkbox">\
      <div class="lianlian-win-title">恭 喜 您 中 奖 了</div>\
      <div class="input-group">\
        <input type="text" id="name" class="form-control" placeholder="输入姓名">\
@@ -399,47 +431,58 @@ define(function(require, exports, module) {
      </div>\
      <div class="game-notice">提 交</div>\
      </div>'
-    );
-    checkBox.find('.input-group').css('height','30px');
+      );
+    checkBox.find('.input-group').css('height', '30px');
     checkBox.find('input').css({
-      'display':'inline-block',
-      'margin':'2px',
-      'borderRadius':'5px'
+      'display': 'inline-block',
+      'margin': '2px',
+      'borderRadius': '5px'
     });
-    checkBox.find('.game-notice').click(function(e){
+    checkBox.find('.game-notice').click(function(e) {
       var name = checkBox.find('#name')[0].value;
-      var adress = checkBox.find('#adress')[0].value;
+      var address = checkBox.find('#adress')[0].value;
       var tel = checkBox.find('#tel')[0].value;
-      if(name&&adress&&tel){
+      if (name && address && tel) {
         checkBox.remove();
         self.restart();
-        //@陆扬才 中奖信息 写入后端的接口;
+        //@陆扬才 提交中奖信息;
+        var url = base + '/ServletPostData?openid=' + idObj.openid + '&uuid=' + idObj.uuid + '&name=' + name+ '&tel=' + tel+ '&address=' + address;
+        $.ajax({
+          type: "GET",
+          url: url, 
+          cache: false,
+          dataType: 'jsonp',
+          success: function(json) {
+          },
+          error: function(e) {
+          }
+        });
       }
     })
-   resultNode.append(checkBox);
+    resultNode.append(checkBox);
   };
 
-  Game.prototype.loose = function(){
+  Game.prototype.loose = function() {
     var self = this;
     var resultNode = this.passNode;
 
     var imgURL = imgBase + 'image/loose.png';
-    imgURL = 'url('+imgURL+')';
+    imgURL = 'url(' + imgURL + ')';
     resultNode.css({
-      'backgroundColor':'rgba(0,0,0,0.6)',
-      'backgroundImage':imgURL,
+      'backgroundColor': 'rgba(0,0,0,0.6)',
+      'backgroundImage': imgURL,
     });
 
-    resultNode.click(function(e){
-      var x = e.pageX/$(this).width();
-      var y = e.pageY/$(this).height();
-      if(x<0.5){
+    resultNode.click(function(e) {
+      var x = e.pageX / $(this).width();
+      var y = e.pageY / $(this).height();
+      if (x < 0.5) {
         self.restart();
       }
     })
   };
 
-  Game.prototype.restart = function(){
+  Game.prototype.restart = function() {
     this.clear();
 
     sucN = 0;

@@ -31,6 +31,19 @@
         },
         // 分享成功
         confirm: function(resp) {
+          // ServletInsertShare
+        //@陆扬才 提交中奖信息;
+        var url = base + '/ServletInsertShare?openid=' + idObj.openid + '&uuid=' + idObj.uuid;
+        $.ajax({
+          type: "GET",
+          url: url, 
+          cache: false,
+          dataType: 'jsonp',
+          success: function(json) {
+          },
+          error: function(e) {
+          }
+        });
           // 分享成功了，我们是不是可以做一些分享统计呢？
           // alert("分享成功，msg======" + resp.err_msg);
         },
