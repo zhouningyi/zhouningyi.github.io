@@ -24,9 +24,9 @@ define(function(require, exports, module) {
   Controller.prototype.start = function() {
     var node = this.node;
     var game = new Game(node, 5, 6);
-    setTimeout(function() {
-      game.pass();
-    }, 1000);
+    // setTimeout(function() {
+    //   game.pass();
+    // }, 1000);
 
     var show = new Show(node);
     show.preLoad();

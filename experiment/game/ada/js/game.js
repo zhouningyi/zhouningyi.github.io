@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
   var imgBase = './';
   var picList = ['image/logo1.png', 'image/logo2.png', 'image/logo3.png', 'image/logo4.png', 'image/logo5.png', 'image/logo6.png', './image/logo7.png', 'image/logo8.png', 'image/logo9.png'];
-  var marginPercent = 0.1;
+  var marginPercent = 0.04;
 
   var titlePhi = 0.363;
   var sucN = 0;
@@ -12,7 +12,7 @@ define(function(require, exports, module) {
   var idObj = window.idObj = {};
 
   var click = 'touchstart';
-  var click = 'mousedown';
+  // var click = 'mousedown';
 
 
   function Game(node, nX, nY) {
@@ -121,7 +121,7 @@ define(function(require, exports, module) {
     var nX = this.nX;
     var nY = this.nY;
 
-    var tinerMin = 50;
+    var tinerMin = 10;
 
     var gridsHx = this.gridsHx =
       Math.min(parseInt((1 - 2 * marginPercent) * w / nX) * nX, h / (titlePhi + nY / nX) - tinerMin);
@@ -170,7 +170,7 @@ define(function(require, exports, module) {
         'left': gridsL + 'px',
         'width': gridsHx + 'px',
       })
-      .text('00: 00: 00');
+      // .text('00: 00: 00');
     this.node.append(timerNode);
   }
 
@@ -396,7 +396,6 @@ define(function(require, exports, module) {
       'backgroundSize': '100%, 100%',
       'backgroundRepeat': 'no-repeat'
     });
-    win = 'true'
     if (win == 'true') {
       this.win();
     } else {
