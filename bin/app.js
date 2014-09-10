@@ -8,5 +8,5 @@ var app = connect();
 app.use(connect.static(path.join(__dirname, "../")));
 app.use(connect.directory(path.join(__dirname, "../")));
 app.use(connect.query());
-app.listen(8888);
-console.log("localhost:8888 run...");
+app.listen(8886);
+console.log("localhost:8886 run...");

@@ -6,7 +6,7 @@
     var wxData = {
       "appId": "", // 服务号可以填写appId
       "imgUrl": 'http://open-wedding.qiniudn.com/share.png',
-      "link": document.url,//'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e4914441f529c5c&redirect_uri=http%3A%2F%2Flenovowx.duapp.com&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect',
+      "link": document.URL,//'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e4914441f529c5c&redirect_uri=http%3A%2F%2Flenovowx.duapp.com&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect',
       "desc": "赢千元机皇联想A916 “联联”看大作战",
       "title": "有奖连连看"
     };
