@@ -1,8 +1,7 @@
 define(function(require, exports, module) {
   var Detect = require('./detect');
-
-  var imgBase = './';
-  var picList = ['image/logo1.png', 'image/logo2.png', 'image/logo3.png', 'image/logo4.png', 'image/logo5.png', 'image/logo6.png', './image/logo7.png', 'image/logo8.png', 'image/logo9.png'];
+  var imgBase = 'http://open-wedding.qiniudn.com/';
+  var picList = ['logo1.png', 'logo2.png', 'logo3.png', 'logo4.png', 'logo5.png', 'logo6.png', './logo7.png', 'logo8.png', 'logo9.png'];
   var marginPercent = 0.04;
 
   var titlePhi = 0.363;
@@ -13,7 +12,6 @@ define(function(require, exports, module) {
 
   var click = 'touchstart';
   // var click = 'mousedown';
-
 
   function Game(node, nX, nY) {
     this.node = node;
@@ -99,13 +97,13 @@ define(function(require, exports, module) {
   }
 
   Game.prototype.bg = function() {
-    var bgURL = 'url(' + imgBase + 'image/bg.png' + ')';
+    var bgURL = 'url(' + imgBase + 'bg.png' + ')';
     this.node
       .css({
         'backgroundImage': bgURL
       });
 
-    var bgURL = 'url(' + imgBase + 'image/table.png)';
+    var bgURL = 'url(' + imgBase + 'table.png)';
     this.gridsNode
       .css({
         'backgroundImage': bgURL
@@ -144,7 +142,7 @@ define(function(require, exports, module) {
 
     // var titleT = parseInt(gridsT * 0.0);
     var titleH = gridsT;
-    var bgURL = 'url(' + imgBase + 'image/title.png' + ')';
+    var bgURL = 'url(' + imgBase + 'title.png' + ')';
     var titleNode = this.titleNode =
       $('<div class="lianlian-title"></div>')
       .css({
@@ -261,7 +259,7 @@ define(function(require, exports, module) {
     var gridsNode = this.gridsNode;
 
     for (var k = 0; k < N; k += 2) {
-      var url = randint(picList);
+      var url = imgBase + randint(picList);
 
       var td = tds[k];
       var grid =
@@ -333,7 +331,7 @@ define(function(require, exports, module) {
     var passL = parseInt(w * (1 - passPhi) / 2);
     var passH = passW;
     var passT = (h - w) / 2;
-    var passImg = 'url(' + imgBase + './image/pass.png' + ')';
+    var passImg = 'url(' + imgBase + './pass.png' + ')';
 
     var passNode = this.passNode = $('<div class="lianlian-pass"></div>')
       .css({
@@ -407,7 +405,7 @@ define(function(require, exports, module) {
     var self = this;
     var resultNode = this.passNode;
 
-    imgURL = 'url(' + imgBase + 'image/result.png)';
+    imgURL = 'url(' + imgBase + 'result.png)';
     resultNode.css({
       'background': 'rgba(0,0,0,0.8)',
       'backgroundImage': imgURL,
@@ -465,7 +463,7 @@ define(function(require, exports, module) {
     var self = this;
     var resultNode = this.passNode;
 
-    var imgURL = imgBase + 'image/loose.png';
+    var imgURL = imgBase + 'loose.png';
     imgURL = 'url(' + imgURL + ')';
     resultNode.css({
       'backgroundColor': 'rgba(0,0,0,0.6)',
