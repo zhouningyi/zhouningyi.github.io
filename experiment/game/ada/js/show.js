@@ -25,6 +25,7 @@ define(function(require, exports, module) {
   };
 
   Show.prototype.begin = function() {
+    this.index = 0;
     this.bg();
     this.slider();
     this.loading();
@@ -59,7 +60,7 @@ define(function(require, exports, module) {
   }
 
   Show.prototype.clear = function() {
-    var outTime = 1500;
+    var outTime = 500;
     this.node.fadeOut(outTime);
     setTimeout(function() {
       this.container.trigger('result')

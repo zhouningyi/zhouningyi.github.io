@@ -41,6 +41,7 @@ define(function(require, exports, module) {
   }
 
   Game.prototype.id = function() {
+    console.log(window.location)
     //@陆扬才 获取openID接口的方法
     var code = getQueryString("code");
     var d = this.detect.info();
@@ -345,15 +346,13 @@ define(function(require, exports, module) {
         $(this).trigger('pass');
         $(this).off(click);
       })
-      .fadeIn(100);
 
     this.node.append(passNode);
   };
 
   Game.prototype.clean = function() {
-
     this.gridsNode.empty();
-    this.gridsNode.fadeOut();
+    this.gridsNode.remove();
     this.passNode.empty().css({
       'background': 'rgba(0,0,0,0.7)'
     }).hide();
