@@ -359,8 +359,8 @@ define(function(require, exports, module) {
     }).hide();
   };
 
-  var win = false;
-  var prizeNames = ['']
+  var win = 'false';
+  var prizeNames = ['联想aisidi手机','联通100元充值卡','联通20元充值卡']
   Game.prototype.price = function() {
     var self = this;
     t = this.stopTimer();
@@ -372,6 +372,8 @@ define(function(require, exports, module) {
       dataType: 'jsonp',
       success: function(json) {
         win = json[0].ifwin;
+        var prizeType = json[0].prizetype
+        prizeName = prizeNames[prizeType];
       },
       error: function(e) {
         alert(JSON.stringify(e));
@@ -417,14 +419,15 @@ define(function(require, exports, module) {
       $(
         '<div class="lianlian-checkbox">\
      <div class="lianlian-win-title">恭 喜 您 中 奖 了</div>\
+     <div class="lianlian-win-describle">'+prizeName+'</div>\
      <div class="input-group">\
-       <input type="text" id="name" class="form-control" placeholder="输入姓名">\
+       <input type="text" id="name" class="form-control" placeholder="姓名(务必填写)">\
      </div>\
      <div class="input-group">\
-       <input type="text" id="adress" class="form-control" placeholder="收货地址">\
+       <input type="text" id="adress" class="form-control" placeholder="地址(务必填写)">\
      </div>\
      <div class="input-group">\
-       <input type="text" id="tel" class="form-control" placeholder="联系电话">\
+       <input type="text" id="tel" class="form-control" placeholder="电话(工作人员会和您联系)">\
      </div>\
      <div class="game-notice">提 交</div>\
      </div>'

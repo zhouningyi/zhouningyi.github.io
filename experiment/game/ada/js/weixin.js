@@ -5,9 +5,9 @@
 
     var wxData = {
       "appId": "", // 服务号可以填写appId
-      "imgUrl": 'http://open-wedding.qiniudn.com/weixin.jpg',
+      "imgUrl": 'http://open-wedding.qiniudn.com/share.png',
       "link": document.URL,
-      "desc": "联联看，连连中，大奖联想手机",
+      "desc": "赢千元机皇联想A916 “联联”看大作战",
       "title": "有奖连连看"
     };
 
