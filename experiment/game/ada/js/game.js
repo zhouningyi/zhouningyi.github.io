@@ -32,21 +32,15 @@ define(function(require, exports, module) {
     startTime = new Date();
     this.timer();
   }
-  //add start by @陆扬才
-  function getQueryString(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-    var r = window.location.search.substr(1).match(reg);
-    if (r != null) return unescape(r[2]);
-    return null;
-  }
 
   Game.prototype.id = function() {
-    console.log(window.location)
     //@陆扬才 获取openID接口的方法
-    var code = getQueryString("code");
-    var d = this.detect.info();
+    win = 'false';
     openID = null;
-    var url = base + '/ServletGetOpenid?platform=' + d.platform + '&product=' + d.product + '&vendor=' + d.vendor + '&code=' + code;
+    
+    var d = this.detect.basic();
+    var url = base + '/ServletGetOpenid' + d;
+
     $.ajax({
       type: "GET",
       url: url, //"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx89452c389f14bcd4&redirect_uri=http%3A%2F%2Fweixinlyc.jd-app.com/ServletGetOpenid&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect",//璇锋眰璺緞
@@ -218,7 +212,6 @@ define(function(require, exports, module) {
     }
   };
 
-
   function randint(arr) {
     curType = parseInt(Math.random() * arr.length);
     return arr[curType];
@@ -343,8 +336,11 @@ define(function(require, exports, module) {
         'backgroundImage': passImg,
       })
       .on(click, function(e) {
-        $(this).trigger('pass');
-        $(this).off(click);
+        window.ep.emit('pass');
+        try{
+          $(this).off(click);
+        }catch(e){}
+        
       })
 
     this.node.append(passNode);
@@ -395,7 +391,7 @@ define(function(require, exports, module) {
       'backgroundSize': '100%, 100%',
       'backgroundRepeat': 'no-repeat'
     });
-    if (win == 'true') {
+    if (win === 'true'|| win===true) {
       this.win();
     } else {
       this.loose();
@@ -417,7 +413,7 @@ define(function(require, exports, module) {
     var checkBox =
       $(
         '<div class="lianlian-checkbox">\
-     <div class="lianlian-win-title">恭 喜 您 中 奖 了</div>\
+     <div class="lianlian-win-title">恭 喜 您 中 奖 </div>\
      <div class="lianlian-win-describle">'+prizeName+'</div>\
      <div class="input-group">\
        <input type="text" id="name" class="form-control" placeholder="姓名(务必填写)">\
@@ -488,6 +484,7 @@ define(function(require, exports, module) {
     startTime = new Date();
     this.timer();
 
+    this.id();
     this.dom();
     this.bg();
     this.table();

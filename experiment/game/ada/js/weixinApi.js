@@ -419,7 +419,6 @@ var WeixinApi = (function () {
                     document.attachEvent('onWeixinJSBridgeReady', wxReadyFunc);
                 }
             }else{
-                // alert(JSON.stringify(WeixinJSBridge))
                 wxReadyFunc();
             }
         }

@@ -5,6 +5,7 @@ define(function(require, exports, module) {
   require('./weixin');
 
   window.base = 'http://lenovowx.duapp.com';
+  var ep = window.ep = new EventProxy();
   function Controller(node) {
     this.node = node;
 
@@ -13,6 +14,7 @@ define(function(require, exports, module) {
     this.warn();
   };
 
+  //避免横着玩手机
   Controller.prototype.warn = function() {
     $(window).on("orientationchange", function(e) {
       if (window.orientation == 90) {
@@ -30,16 +32,15 @@ define(function(require, exports, module) {
 
     var show = new Show(node);
     show.preLoad();
-
-    node.on('pass', function() {
+    ep.on('pass', function() {
       game.clean();
       game.price();
       show.begin();
       //@陆扬才： 是否中奖的接口
-    })
-      .on('result', function(e) {
+    });
+    ep.on('result', function(e) {
         game.result();
-      })
+      });
   };
 
   module.exports = Controller;

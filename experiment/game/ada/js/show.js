@@ -63,7 +63,7 @@ define(function(require, exports, module) {
     var outTime = 500;
     this.node.fadeOut(outTime);
     setTimeout(function() {
-      this.container.trigger('result')
+      window.ep.emit('result');
     }.bind(this), outTime)
   }
 

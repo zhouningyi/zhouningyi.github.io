@@ -3,13 +3,15 @@
 
   define(function(require, exports, module) {
 
-    var wxData = {
-      "appId": "", // 服务号可以填写appId
-      "imgUrl": 'http://open-wedding.qiniudn.com/share.png',
-      "link": document.URL,//'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e4914441f529c5c&redirect_uri=http%3A%2F%2Flenovowx.duapp.com&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect',
-      "desc": "赢千元机皇联想A916 “联联”看大作战",
-      "title": "有奖连连看"
-    };
+    var desc = "赢千元机皇联想A916 “联联”看大作战";
+    var appid = "wx0e4914441f529c5c"
+    var title = "有奖连连看"
+    var imgurl = 'http://open-wedding.qiniudn.com/share.png'
+    var urlWeibo = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e4914441f529c5c&redirect_uri=http%3A%2F%2Flenovoweb.duapp.com/?'+'fromWeibo'+'/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
+    var urlTimeline = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e4914441f529c5c&redirect_uri=http%3A%2F%2Flenovoweb.duapp.com/?'+'fromTimeline'+'/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
+    var urlFriend = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e4914441f529c5c&redirect_uri=http%3A%2F%2Flenovoweb.duapp.com/?'+'fromFriend'+'/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
+    var urlPublic = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e4914441f529c5c&redirect_uri=http%3A%2F%2Flenovoweb.duapp.com/?'+'fromPublic'+'/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
+    var urlGeneral = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e4914441f529c5c&redirect_uri=http%3A%2F%2Flenovoweb.duapp.com/?'+'fromGeneral'+'/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
 
     WeixinApi.ready(function(Api) {
       // 分享的回调
@@ -32,18 +34,17 @@
         // 分享成功
         confirm: function(resp) {
           // ServletInsertShare
-        //@陆扬才 提交中奖信息;
-        var url = base + '/ServletInsertShare?openid=' + idObj.openid + '&uuid=' + idObj.uuid;
-        $.ajax({
-          type: "GET",
-          url: url, 
-          cache: false,
-          dataType: 'jsonp',
-          success: function(json) {
-          },
-          error: function(e) {
-          }
-        });
+          //@陆扬才 提交中奖信息;
+          resp = JSON.stringify(resp);
+          var url = base + '/ServletInsertShare?openid=' + idObj.openid + '&uuid=' + idObj.uuid + '&to=' + resp;
+          $.ajax({
+            type: "GET",
+            url: url,
+            cache: false,
+            dataType: 'jsonp',
+            success: function(json) {},
+            error: function(e) {}
+          });
           // 分享成功了，我们是不是可以做一些分享统计呢？
           // alert("分享成功，msg======" + resp.err_msg);
         },
@@ -55,16 +56,42 @@
       };
 
       // 用户点开右上角popup菜单后，点击分享给好友，会执行下面这个代码
-      Api.shareToFriend(wxData, wxCallbacks);
+      Api.shareToFriend({
+        "appId": appid,
+        "imgUrl": imgurl,
+        "link": urlFriend,
+        "desc": desc,
+        "title": title
+    }, wxCallbacks);
 
       // 点击分享到朋友圈，会执行下面这个代码
-      Api.shareToTimeline(wxData, wxCallbacks);
+      Api.shareToTimeline({
+        "appId": appid,
+        "imgUrl": imgurl,
+        "link": urlTimeline,
+        "desc": desc,
+        "title": title
+    }, wxCallbacks);
 
       // 点击分享到腾讯微博，会执行下面这个代码
-      Api.shareToWeibo(wxData, wxCallbacks);
+      Api.shareToWeibo({
+        "appId": appid,
+        "imgUrl": imgurl,
+        "link": urlWeibo,
+        "desc": desc,
+        "title": title
+    }, wxCallbacks);
 
       // iOS上，可以直接调用这个API进行分享，一句话搞定
-      Api.generalShare(wxData, wxCallbacks);
+      Api.generalShare({
+        "appId": appid,
+        "imgUrl": imgurl,
+        "link": urlGeneral,
+        "desc": desc,
+        "title": title
+    }, wxCallbacks);
+
     });
+
 
   });
