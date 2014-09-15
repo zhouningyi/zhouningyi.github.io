@@ -87,7 +87,7 @@ define(function(require, exports, module) {
     var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
     cancelAnimationFrame(window.animateID);
     return parseInt((curTime.getTime() - startTime.getTime()) / 1000);}
-    cache(e){return 0;}
+    catch(e){return 0;}
   }
   Game.prototype.cleanTimer = function() {
     this.timerNode.text('');
