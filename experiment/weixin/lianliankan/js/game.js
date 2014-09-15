@@ -358,6 +358,7 @@ define(function(require, exports, module) {
   var win = 'false';
   var prizeNames = ['联想aisidi手机','联通100元充值卡','联通20元充值卡']
   Game.prototype.price = function() {
+    alert('price')
     var self = this;
     t = this.stopTimer();
     var url = base + '/ServletWinPrice?openid=' + idObj.openid + '&uuid=' + idObj.uuid + '&optime=' + t;
