@@ -25,6 +25,7 @@ define(function(require, exports, module) {
   };
 
   Show.prototype.begin = function() {
+    alert('show begin');
     this.index = 0;
     this.bg();
     this.slider();
@@ -34,7 +35,7 @@ define(function(require, exports, module) {
 
   Show.prototype.bg = function() {
     var node = this.node = $('<div class="lianlian-show"></div>');
-    alert(this.node.width+','+this.node.height())
+    alert('长宽'+'：'this.node.width()+','+this.node.height());
     this.container.append(node);
     var canvasImg = this.canvasImg = generateSprite('#477', '#8aa', '#dee', 360, 640);
     node.css({

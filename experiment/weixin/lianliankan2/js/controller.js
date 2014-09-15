@@ -33,6 +33,7 @@ define(function(require, exports, module) {
     var show = new Show(node);
     show.preLoad();
     ep.on('pass', function() {
+      alert('pass events');
       game.clean();
       game.price();
       show.begin();
