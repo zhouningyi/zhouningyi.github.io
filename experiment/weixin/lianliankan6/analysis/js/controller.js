@@ -27,7 +27,7 @@ define(function(require, exports, module) {
     //一秒刷新一次
     var self = this;
     this.page.update();
-    setTimeout(this.update.bind(this), 10000);
+    setTimeout(this.update.bind(this), 5000);
   };
 
   Controller.prototype.click = function(){

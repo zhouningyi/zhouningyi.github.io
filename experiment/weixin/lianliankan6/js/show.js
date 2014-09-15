@@ -25,7 +25,6 @@ define(function(require, exports, module) {
   };
 
   Show.prototype.begin = function() {
-    alert('show begin');
     this.index = 0;
     this.bg();
     this.slider();
@@ -35,7 +34,6 @@ define(function(require, exports, module) {
 
   Show.prototype.bg = function() {
     var node = this.node = $('<div class="lianlian-show"></div>');
-    alert('长宽'+'<'+this.node.width()+','+this.node.height());
     this.container.append(node);
     var canvasImg = this.canvasImg = generateSprite('#477', '#8aa', '#dee', 360, 640);
     node.css({
@@ -63,7 +61,7 @@ define(function(require, exports, module) {
 
   Show.prototype.clear = function() {
     var outTime = 500;
-    this.node.remove();
+    this.node.fadeOut(outTime);
     setTimeout(function() {
       window.ep.emit('result');
     }.bind(this), outTime)
@@ -76,10 +74,10 @@ define(function(require, exports, module) {
 
   Show.prototype.img = function(index) {
     var imgList = this.imgList;
-    this.showNode.find('img').remove();
+    this.showNode.find('img').fadeOut(1000);
     this.showNode.append($(imgList[index]).css({
       'width': '100%',
-    }));
+    }).fadeIn(1000));
   }
 
   function generateSprite(colorOut, colorCenter, colorIn, w, h) {
