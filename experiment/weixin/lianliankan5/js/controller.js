@@ -39,6 +39,7 @@ define(function(require, exports, module) {
       game.price();
       alert('price send');
       alert(show);
+      show.begin();
       //@陆扬才： 是否中奖的接口
     });
     ep.on('result', function(e) {
