@@ -35,8 +35,10 @@ define(function(require, exports, module) {
     ep.on('pass', function() {
       alert('pass events');
       game.clean();
+      alert('clean done');
       game.price();
-      show.begin();
+      alert('price send');
+      alert(show);
       //@陆扬才： 是否中奖的接口
     });
     ep.on('result', function(e) {
