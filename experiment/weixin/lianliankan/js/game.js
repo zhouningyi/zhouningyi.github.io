@@ -337,6 +337,7 @@ define(function(require, exports, module) {
       })
       .on(click, function(e) {
         window.ep.emit('pass');
+        alert('pass emit');
         try{
           $(this).off(click);
         }catch(e){}
