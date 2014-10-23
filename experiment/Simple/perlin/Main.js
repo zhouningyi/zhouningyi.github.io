@@ -120,12 +120,17 @@
   }
 
 
-  function onMouseMove(e){
+  function update(e){
     time = 0;
     mxKTarget = 0.001+e.pageX/2000;
     myKTarget = 0.001+e.pageY/500;
   }
-  $("#banner").mousemove(onMouseMove);
+
+  $("#banner").mousemove(update).on('touchstart', update);
+
+  console.log(Board)
+
+  new Board('野兽的图形草稿').black();
 
   root.Perlin = Perlin;
   root.Shape = Shape;
