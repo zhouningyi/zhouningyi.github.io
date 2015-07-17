@@ -32,9 +32,8 @@
         (function update() {
             updatePt(t++);
             heatmap.adjustSize();
-            //清理场景
             heatmap.multiply(0.925)
-            heatmap.update(); // adds the buffered points
+            heatmap.update(); // adds the buffered point
             heatmap.display(); // adds the buffered points
             raf(update);
         })();
