@@ -25,6 +25,21 @@ import ppt_config from './ppt_config.json';
 
 let count = 0;
 
+const GEOM_WIDTH = 1000;
+const GEOM_HEIGHT = 650;
+const CAMERA_INFO = {
+  "rotation": {
+    "x": -0.05004746781765534,
+    "y": -0.02603108408303864,
+    "z": -0.0013037306655329338
+  },
+  "position": {
+    "x": -0.11436788687120689,
+    "y": 0.2197427348444517,
+    "z": 4.3870199027889205
+  }
+} ;
+
 class DisplayLayer extends Component {
   constructor(){
     super();
@@ -145,18 +160,13 @@ class DisplayLayer extends Component {
   }
   initScreen(){
     const scale = 3 / 1000;
-    const geom_width = 1024;
-    const geom_height = 768;
-    const geometry = new THREE.PlaneGeometry(geom_width, geom_height);
+    const geometry = new THREE.PlaneGeometry(GEOM_WIDTH, GEOM_HEIGHT);
     const material = this.genScreenMat();
-    // const material = new THREE.MeshBasicMaterial({color: '#f00'});
 
     const mesh = this.mesh = new THREE.Mesh( geometry, material );
-    // mesh.rotation.x = - Math.PI / 2;
     mesh.scale.set( scale, scale, scale );
-    mesh.position.set(0, geom_height * scale / 2, 0);
+    mesh.position.set(0, GEOM_HEIGHT * scale / 2, 0);
     this.scene.add( mesh );
-    // const mesh = 
   }
   genScreenMat(){
     const canvas = document.createElement('canvas');
@@ -190,14 +200,37 @@ class DisplayLayer extends Component {
     // controls.autoRotateSpeed = - 1.0;
     controls.enableDamping = true;
   }
+  _updateCamera(){
+    const { camera } = this;
+    const { rotation, position } = camera;
+    const o = {
+      rotation: {
+        x: rotation._x,
+        y: rotation._y,
+        z: rotation._z,
+      },
+      position: {
+        x: position.x,
+        y: position.y,
+        z: position.z,
+      }
+    };
+    console.log(JSON.stringify(o, null, 2), 'rotation, position...');
+  }
+  updateCamera(){
+    this._updateCamera()
+    setTimeout(this.updateCamera.bind(this), 5000);
+  }
   initWebGLLayer(){
     const scene = this.scene = new THREE.Scene();
     scene.fog = new THREE.Fog( 0x000000, 1500, 4000 );
     // scene.background = new THREE.Vector4( 0,0,222,0 );
     scene.transparent = true;
     const camera = this.camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10 );
-    camera.position.set( 0, 1.6, 3 );
+    camera.position.set( CAMERA_INFO.position.x, CAMERA_INFO.position.y, CAMERA_INFO.position.z );
+    camera.rotation.set( CAMERA_INFO.rotation.x, CAMERA_INFO.rotation.y, CAMERA_INFO.rotation.z );
 
+    
     // this.initWebGLMeshes();
     this.initParticles();
     this.initScreen();
@@ -225,6 +258,7 @@ class DisplayLayer extends Component {
   componentDidMount(){
     this.initWebGLLayer();
     this.loadPPT();
+    this.updateCamera();
     this.reset();
     this.animate();
   }
